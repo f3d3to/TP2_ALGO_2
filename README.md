@@ -30,10 +30,10 @@ luego de cada jugada.
 
 ## Cuestionario
 Responder las preguntas:
-    - 1) ¿Qué es un svn?
-    - 2) ¿Qué es git?
-    - 3) ¿Qué es Github?
-    - 4) ¿Qué es un valgrind?
+1.   ¿Qué es un svn?
+2.   ¿Qué es git?
+3.   ¿Qué es Github?
+4.   ¿Qué es un valgrind?
 
 
 ## Normas de entrega
