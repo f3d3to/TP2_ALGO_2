@@ -11,7 +11,7 @@ private:
     Ficha * ficha;
     Casillero **** casillerosAdyacentes;
     EstadoCasillero estado;
-    TipoCasillero tipo;
+    TipoTerreno terreno;
 
 public:
     /*
@@ -111,6 +111,14 @@ public:
      *Post: devuelve verdadero si el casillero no posee una ficha
      */
     bool estaVacio();
+
+    TipoTerreno obtenerTerreno() const {
+        return terreno;
+    }
+
+    void asignarTerreno(TipoTerreno nuevoTerreno) {
+        terreno = nuevoTerreno;
+    }
 };
 
 

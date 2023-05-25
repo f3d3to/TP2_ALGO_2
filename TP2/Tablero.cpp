@@ -17,6 +17,19 @@ Tablero::Tablero(unsigned int x, unsigned int y, unsigned int z) {
 
             for (unsigned int i = 0; i < x; i++) {
             	Casillero * casillero = new Casillero();
+
+                if (k < 5) {
+                    // Los niveles del 1 al 5 son tierra o agua
+                    if ((i + j) % 2 == 0) {
+                        casillero->asignarTerreno(TIERRA);
+                    } else {
+                        casillero->asignarTerreno(AGUA);
+                    }
+                } else {
+                    // Los niveles superiores representan el aire
+                    casillero->asignarTerreno(AIRE);
+                }
+                
                 columna->altaFinal(casillero);
             }
 

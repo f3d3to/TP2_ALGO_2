@@ -4,7 +4,7 @@
 Casillero::Casillero(){
     this->ficha = NULL;
     this->estado = CASILLERO_DESBLOQUEADO;
-    this->tipo = TIERRA;
+    this->terreno = TIERRA;
     
     this->casillerosAdyacentes = new Casillero *** [3];
     for (int i = 0; i < 3; i++) {

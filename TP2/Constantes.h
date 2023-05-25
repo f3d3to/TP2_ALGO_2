@@ -19,7 +19,7 @@ enum EstadoCasillero {
     CASILLERO_DESBLOQUEADO
 };
 
-enum  TipoCasillero {
+enum TipoTerreno {
     TIERRA,
     AGUA,
     AIRE

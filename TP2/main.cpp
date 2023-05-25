@@ -24,5 +24,7 @@ int main() {
     interfaz->mostrarTablero(tablero);
 
 
+
+
     return 0;
 }
