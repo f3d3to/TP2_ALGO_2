@@ -1,18 +1,14 @@
 #ifndef CONSTANTES_H_
 #define CONSTANTES_H_
 
-
 #include <string>
 
-
-#define VACIO '.' // tira error si hay espacio ' '
-
+#define VACIO '.'
 
 enum EstadoFicha {
     FICHA_DESBLOQUEADA,
     FICHA_BLOQUEADA
 };
-
 
 enum EstadoCasillero {
     CASILLERO_BLOQUEADO,
@@ -26,7 +22,19 @@ enum TipoTerreno {
 };
 
 
-
-
-
 #endif /* CONSTANTES_H_ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

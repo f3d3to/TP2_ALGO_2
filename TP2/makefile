@@ -6,8 +6,8 @@ all: batalla_digitalv2 clear
 
 #Make Main
 
-batalla_digitalv2: main.o ficha.o casillero.o  tablero.o interfaz.o
-	$(CC) $(CFLAGS) $(CXXFLAGS) -o batalladigitalv2 main.o ficha.o casillero.o tablero.o interfaz.o
+batalla_digitalv2: main.o ficha.o casillero.o  tablero.o interfaz.o carta.o
+	$(CC) $(CFLAGS) $(CXXFLAGS) -o batalladigitalv2 main.o ficha.o casillero.o tablero.o interfaz.o carta.o
 
 #Make Obj
 
@@ -23,9 +23,11 @@ tablero.o: Tablero.cpp Tablero.h
 casillero.o: Casillero.cpp Casillero.h
 	$(CC) $(CFLAGS) -o casillero.o  -c Casillero.cpp
 
-
 ficha.o: Ficha.cpp  Ficha.h
 	$(CC) $(CFLAGS) -o ficha.o  -c Ficha.cpp
+
+carta.o: carta.cpp  carta.h 
+	$(CC) $(CFLAGS) -o carta.o  -c carta.cpp
 
 
 #Make Clear
