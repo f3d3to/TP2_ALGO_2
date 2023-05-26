@@ -1,41 +1,28 @@
 #include "Jugador.h"
 
-std::string Jugador::obtenerNombre() {
-    return nombreJugador;
+Jugador::Jugador(Jugador *jugador) {
+  this->simbolo = ficha->getSimbolo();
+  this->estado = FICHA_DESBLOQUEADA;
 }
 
-void Jugador::asignarNombre(std::string nombre) {
-    nombreJugador = nombre;
-}
+std::string Jugador::obtenerNombre() { return nombreJugador; }
 
-Ficha* Jugador::obtenerFicha() {
-    return ficha;
-}
+void Jugador::asignarNombre(std::string nombre) { nombreJugador = nombre; }
 
-void Jugador::asignarFicha(Ficha* nuevaFicha) {
-    ficha = nuevaFicha;
-}
+Ficha *Jugador::obtenerFicha() { return ficha; }
 
-int Jugador::obtenerCantidadFichas() {
-    return cantidadFichas;
-}
+void Jugador::asignarFicha(Ficha *nuevaFicha) { ficha = nuevaFicha; }
 
-void Jugador::asignarCantidadFichas(int cantidad) {
-    cantidadFichas = cantidad;
-}
+int Jugador::obtenerCantidadFichas() { return cantidadFichas; }
 
-Lista<Carta> Jugador::obtenerCartas() {
-    return cartas;
-}
+void Jugador::asignarCantidadFichas(int cantidad) { cantidadFichas = cantidad; }
+
+Lista<Carta> Jugador::obtenerCartas() { return cartas; }
 
 void Jugador::asignarCartas(Lista<Carta> nuevasCartas) {
-    cartas = nuevasCartas;
+  cartas = nuevasCartas;
 }
 
-int Jugador::obtenerTurnos() {
-    return turnos;
-}
+int Jugador::obtenerTurnos() { return turnos; }
 
-void Jugador::asignarTurnos(int nuevosTurnos) {
-    turnos = nuevosTurnos;
-}
+void Jugador::asignarTurnos(int nuevosTurnos) { turnos = nuevosTurnos; }
