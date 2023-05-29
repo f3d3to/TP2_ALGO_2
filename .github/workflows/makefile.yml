@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: make Batalla Digital
-      run: make batalla_digitalv2
+      run: cd TP2 && make batalla_digitalv2
 
     - name: Comprobar memoria
       run: make leak_test
