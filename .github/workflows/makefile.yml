@@ -13,9 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Instalación valgrind
+      run: sudo apt install -y valgrind
 
-    - name: make Batalla Digital
+    - name: Compilación del juego
       run: cd TP2 && make batalla_digitalv2
 
     - name: Comprobar memoria
-      run: make leak_test
+      run: cd TP2 && make leak_test
