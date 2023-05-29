@@ -1,5 +1,5 @@
 CXXFLAGS=-std=c++98
-CFLAGS=-g -pedantic -Wall -ansi
+CFLAGS=-g -pedantic -Wall -ansi -fPIE
 CC=g++
 
 all: batalla_digitalv2 clear
@@ -26,8 +26,8 @@ casillero.o: Casillero.cpp Casillero.h
 ficha.o: Ficha.cpp  Ficha.h
 	$(CC) $(CFLAGS) -o ficha.o  -c Ficha.cpp
 
-carta.o: carta.cpp  carta.h 
-	$(CC) $(CFLAGS) -o carta.o  -c carta.cpp
+carta.o: Carta.cpp  Carta.h 
+	$(CC) $(CFLAGS) -o carta.o  -c Carta.cpp
 
 
 #Make Clear
