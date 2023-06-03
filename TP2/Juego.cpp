@@ -13,7 +13,7 @@ Juego::Juego(){
 
     for(unsigned int i=0; cantidadJugadores; i++){
         std::string nombre = pedirNombre(i+1);
-        Ficha * ficha = new Ficha ("aca va que armamento va ver logica" + i);
+        Ficha * ficha = new Ficha ('i'+ i); //VER COMO HACER PARA CREAR DISTINTOS TIPOS DE ARMAMENTOS
         Jugador *nuevoJugador = new Jugador(nombre,ficha,cantidadFichas);
         this->jugadores->altaFinal(nuevoJugador);
     }
@@ -39,6 +39,23 @@ Juego::Juego(){
 
 }
 
+Juego::~Juego() {
+    
+    delete this->tablero;
+
+    this->jugadores->iniciarCursor();
+    while( this->jugadores->avanzarCursor() ) {
+        delete this->jugadores->obtenerCursor();
+    }
+    delete this->jugadores;
+
+    while( ! this->mazo->estaVacia() ) {
+        delete this->mazo->pop();
+    }
+    delete this->mazo;
+
+    delete this->interfaz;
+}
 
 bool Juego::determinarGanador(){
     bool hayGanador;
