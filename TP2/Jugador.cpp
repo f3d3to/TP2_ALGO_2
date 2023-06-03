@@ -5,24 +5,19 @@ Jugador::Jugador(Jugador *jugador) {
   this->estado = FICHA_DESBLOQUEADA;
 }
 
-std::string Jugador::obtenerNombre() { return nombreJugador; }
+std::string Jugador::getNombre() { return nombreJugador; }
 
-void Jugador::asignarNombre(std::string nombre) { nombreJugador = nombre; }
+Ficha *Jugador::getFicha() { return ficha; }
 
-Ficha *Jugador::obtenerFicha() { return ficha; }
+void Jugador::setFicha(Ficha *nuevaFicha) { this->ficha = nuevaFicha;}
 
-void Jugador::asignarFicha(Ficha *nuevaFicha) { ficha = nuevaFicha; }
+int Jugador::getCantidadFichas() { return cantidadFichas; }
 
-int Jugador::obtenerCantidadFichas() { return cantidadFichas; }
+void Jugador::setCantidadFichas(int cantidad) { this->cantidadFichas = cantidad; }
 
-void Jugador::asignarCantidadFichas(int cantidad) { cantidadFichas = cantidad; }
+Lista<Carta *>* Jugador::getCartas() { return cartas; }
 
-Lista<Carta> Jugador::obtenerCartas() { return cartas; }
+void Jugador::setCartas(Lista<Carta*>* nuevasCartas) {this->cartas = nuevasCartas;}
+int Jugador::getTurnos() { return contador_turnos; }
 
-void Jugador::asignarCartas(Lista<Carta> nuevasCartas) {
-  cartas = nuevasCartas;
-}
-
-int Jugador::obtenerTurnos() { return turnos; }
-
-void Jugador::asignarTurnos(int nuevosTurnos) { turnos = nuevosTurnos; }
+void Jugador::setTurnos(int nuevosTurnos) {this->contador_turnos = nuevosTurnos; }

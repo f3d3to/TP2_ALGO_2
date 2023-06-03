@@ -60,6 +60,8 @@ public:
      */
     void pedirCantidadJugadores();
 
+    void mostrarTableroDeJugador();
+
     /*
      * Post: pide por pantalla la cantidad de Fichas que tendra cada Jugador
      */
@@ -164,11 +166,16 @@ public:
      */
     void jugadorNoTieneCartaElegida();
 
-
     /*
      * Post: imprime por pantalla un mensaje indicando al usuario que el mismo no posee cartas en su mano
      */
     void jugadorSinCartas();
+
+    /* Post: Limpia la interfaz de juego */
+    void limpiarPantalla();
+
+    /*Post: imprime por pantalla el nombre del jugador*/
+    void mostrarJugadorEnTurno(std::string nombreJugador);
 };
 
 
