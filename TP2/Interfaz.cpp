@@ -241,3 +241,11 @@ void Interfaz::jugadorSinCartas() {
 void Interfaz::ingresoInvalido() {
     std::cout << "\nEl valor ingresado es invalido, vuelva a intentar" << std::endl;
 }
+
+void Interfaz::mostrarJugadorEnTurno(std::string nombreDeJugador){
+    std::cout << "\nEs el turno del jugador" << nombreDeJugador <<"."<< std::endl;
+}
+
+void Interfaz::limpiarPantalla() {
+    std::cout << "\033[H\033[2J\033[3J"; // CARACTER PARA LIMPIAR LA PANTALLA
+}
