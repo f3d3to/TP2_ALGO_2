@@ -1,4 +1,7 @@
 # Diagramas de funcional del programa
+
+- ASIGNA UNA CANTIDAD PRECISA DE FICHAS A CADA JUGADOR
+
 En este archivo hay un diagrama de cómo funciona el juego.
 
 

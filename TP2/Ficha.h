@@ -6,14 +6,16 @@
 class Ficha {
 
 private:
-  char simbolo;
   EstadoFicha estado;
+  TipoDeFicha tipoDeFicha;
+  int identificador;
 
 public:
-  /* Pre: Recibe una char que representara el simbolo de la ficha
-   * Post: crea una ficha con el simbolo indicado y estado desbloqueado
-   * */
-  Ficha(char simbolo);
+  /* Pre: Recibe una char que representara el simbolo de la ficha.
+   Tambien recibe un identificador de tipo entero.
+   Post: crea una ficha con el tipo indicado e idenficador. Su estado es desbloqueado.
+   */
+  Ficha(TipoDeFicha tipoDeFicha,int identificador);
 
   /* Pre: la fichaOriginal debe ser valida
    * Post: crea una ficha como copia de la ficha dada, y estado desbloqueado
@@ -26,9 +28,9 @@ public:
   ~Ficha();
 
   /*
-   * Post: devuelve el simbolo de la Ficha
+   * Post: devuelve el tipo de la Ficha
    **/
-  char getSimbolo();
+  TipoDeFicha getTipoDeFicha();
 
   /*
    * Post: devuelve true si los simbolos de la Ficha recibida es igual al
@@ -51,12 +53,8 @@ public:
    */
   bool estaBloqueada();
 
-private:
-  /*
-   * Post:valida que el simbolo ingresado no sea '\0  o ' ' o lanza un excepcion
-   *en caso contrario.
-   **/
-  void validar(char simbolo);
+//private:
+  
 };
 
 #endif /* FICHA_H_ */

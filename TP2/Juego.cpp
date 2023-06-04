@@ -4,17 +4,19 @@ Juego::Juego(){
 
     this->interfaz = new Interfaz();
     this->ganador = NULL;
-    this->jugadorAnterior = NULL;
 
     unsigned int cantidadJugadores = pedirCantidadJugadores();
     unsigned int cantidadFichas = pedirCantidadFichas();
 
     this->jugadores = new Lista < Jugador * >;
-
+    
     for(unsigned int i=0; cantidadJugadores; i++){
         std::string nombre = pedirNombre(i+1);
-        Ficha * ficha = new Ficha ('i'+ i); //VER COMO HACER PARA CREAR DISTINTOS TIPOS DE ARMAMENTOS
-        Jugador *nuevoJugador = new Jugador(nombre,ficha,cantidadFichas);
+
+      // Ficha * ficha = new Ficha (ficha->getSimbolo()+ i); //VER COMO HACER PARA CREAR DISTINTOS TIPOS DE ARMAMENTOS
+        Jugador *nuevoJugador = new Jugador(nombre, );
+        // nuevoJugador-> = new Lista < Jugador * >;
+        
         this->jugadores->altaFinal(nuevoJugador);
     }
 
@@ -34,9 +36,6 @@ Juego::Juego(){
         Carta * nuevaCarta = new Carta(funcionalidad);
         this->mazo->push(nuevaCarta);
     }
-    
-
-
 }
 
 Juego::~Juego() {
@@ -67,11 +66,19 @@ bool Juego::determinarGanador(){
         hayGanador = false;
     }
     return hayGanador;
-
 };
 
+// void Juego::ValidacionAvanzarDeTurno(){
+//     for (int i; i< this->jugadores->contarElementos(); i++){
+//         jugadores->obtener(i);
+        
+//         cambiarDeJugador();
+//     }
 
-void Juego::cambiarTurno(){
+//     cambiarDeTurno()
+
+// }
+void Juego::cambiarDeJugadorActual( ){
     this->jugadores->avanzarCursor();
     this->jugadorEnTurno = this->jugadores->obtenerCursor();
     this->interfaz->limpiarPantalla(); // Chequear
@@ -111,8 +118,8 @@ unsigned int Juego::pedirCantidadFichas() {
         this->interfaz->pedirCantidadFichas();
         try {
             std::cin >> cantidadFichas;
-            if (cantidadFichas < 1){
-                throw "Error menos de 1 ficha";
+            if (cantidadFichas < 4){
+                throw "Error menos de 4 ficha";
             }
             cantidadValida = true;
         } catch (...) { //En caso de que ingrese un valor inválido se le indica al usuario que lo que ingreso es inválido
@@ -181,7 +188,6 @@ unsigned int Juego::pedirCantidadCartasPorJugador() {
     bool cantidad_valida = false;
 
     while ( !cantidad_valida ) {
-
         this->interfaz->pedirCantidadCartas();
         try {
             std::cin>>cantidadCartas;
@@ -193,7 +199,6 @@ unsigned int Juego::pedirCantidadCartasPorJugador() {
             this->interfaz->ingresoInvalido();
         }
     }
-
     return (unsigned int)cantidadCartas;
 }
 
@@ -217,6 +222,119 @@ funcion_t Juego::getFuncionalidad(unsigned int indice){
     throw "Numero de carta no valido";
 }
 
+void Juego::moverSoldado(){
+    int x,y,z, x1, y1, z1;
+    this->interfaz->pedirCoordOrigenMoverFicha();
 
-
+    // Pide coordenadas origen hasta las ingrese correctamente
+    std::cin >>x;
+    std::cin >>y;
+    std::cin >>z;
+    // Valida coordenadas
     
+    if(!(this->tablero->existeCasillero(x, y, z))){
+        
+    // Validar que la casilla contenga una ficha, sea un soldado, que pertenezca al jugador y que la casilla no esté inactiva
+        throw "La posicion indicada no existe";
+    }
+
+    // Seleccionar la ficha 
+    Ficha *fichaOrigen = this->tablero->getCasillero(x,y,z)->getFicha();
+
+    // Pide coordenadas de destino hasta las ingrese correctamente 
+    this->interfaz->pedirCoordDestinoMoverFicha();
+    std::cin >>x1;
+    std::cin >>y1;
+    std::cin >>z1;
+
+    if(!(this->tablero->existeCasillero(x1, y1, z1))){   
+    // Validar que la casilla contenga una ficha, sea un soldado, que pertenezca al jugador y que la casilla no esté inactiva
+        throw "La posicion indicada no existe";
+    }
+
+    // Valida que la casilla no este inactiva, que no haya una Ficha enemiga, ni del jugador
+    // Mueve la ficha
+    Ficha *fichaDestino = this->tablero->getCasillero(x1,y1,z1)->getFicha();
+
+    // Swap ficha
+    if ((!fichaDestino->estaBloqueada()) && fichaDestino!=NULL){
+        // Swap la ficha
+        this->tablero->getCasillero(x1,y1,z1)->setFicha(fichaOrigen);
+        // Elimina la fichaOrigen
+        this->tablero->getCasillero(x,y,z)->quitarFicha();
+        // Mensaje de ficha ha sido movida con éxito
+        this->interfaz->informarMovimientoDeFicha();
+    }
+   
+}
+
+
+void Juego::jugarBatallaDigital(){
+    /*
+    Mientras el juego no esté terminado,
+        - pide una accion al jugadorActual
+        - ejecuta a accion --> varias cosas
+        - muestra el mensaje de resultado de la accion
+        - determinarGanador:
+            - SI: mostrar gandor | finaliza el juego
+            - NO: cambia de turno -->
+
+    */
+    this->interfaz->mostrarPantallaInicial();
+    // TODO: mostrar ""
+    while(!(this->ganador)){
+        /* Recorrer la lista de jugadores(cambiando el jugadorActual), y para cada jugador
+         pedir la acciones, ejecutarlas y validar los movimientos, mostrando
+         el estado del tablero para ese jugador.
+         Hasta que se encuentre un ganador.
+        */
+        this->jugadores->iniciarCursor();
+        
+        
+        // Recorre la lista 
+        while(!(this->ganador) && this->jugadores->avanzarCursor()){
+
+            Jugador * jugadorActual= jugadores->obtenerCursor();
+
+            // Valida que no esté muerto
+            if(jugadorActual->getCantidadFichas() != 0){
+                // mostrar tablero de jugador --->
+                
+                ////this->mostrarTableroJugador();
+                // sacar carta
+                this->sacarCarta();
+                
+                this->usarCarta();
+                // chequear ganador
+                // Colocar una mina en un casillero.
+                    // explotar o colocar en casillero.
+                // preguntar soldado o armamento
+                //mover soldado o armamento
+                // validar movimiento 
+
+                this->moverFicha();
+
+                this->ejecutarAtaque();
+                // chequear ganador
+                
+                // jugar carta
+                    // realizar accion y mostrarla por pantalla 
+                    // chequear ganador
+                
+                // chequear ganador
+                // cambiar jugador 
+                
+                // this->validarTurno();
+                
+            }
+            // this->jugadorActual->sumarTurno();
+            this->jugadores->obtenerCursor()->setTurnos(cantidadTurnosJuego++);
+        }
+      this->cantidadTurnosJuego ++;
+      // restarle a todos los casilleros que tengan "efectos" un turno.
+    }
+    /*
+      mostrar mensaje de ganador 
+
+    */
+}

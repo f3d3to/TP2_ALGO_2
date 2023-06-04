@@ -11,19 +11,18 @@
 #include "Interfaz.h"
 #include "Constantes.h"
 
-
+typedef enum {ENCURSO, FINALIZADO} Estado;
 class Juego{
-
 
 private:
 	Lista < Jugador * > * jugadores;
     Cola < Carta * > * mazo;
     Jugador * jugadorEnTurno;
-    Jugador * jugadorAnterior;
     Jugador * ganador;
     Tablero * tablero;
     Interfaz * interfaz;
     unsigned int cantidadMaximaCartas;
+    Estado estadoActual;
 
 public:
 
@@ -32,7 +31,12 @@ public:
     ~Juego();
 
     std::string pedirNombre(int jugadorNumero);
-    void cambiarTurno();
+    void cambiarDeJugadorActual();
+    
+    /*Pre:
+    Post: cambia el turno
+    */
+    void cambiarDeTurno();
 
     /* Post: valida si ganador no es NULL */
     bool determinarGanador();
@@ -43,6 +47,11 @@ public:
     /* Post: ejecuta la accion del jugador */
     void moverSoldado();
     void ejecutarAtaque();
+    /* Pre:Exista una clase juego previamente.
+       Post:inicia la logica del juego batalla digital.
+    */
+    void jugarBatallaDigital();
+
 
 private:
     std::string pedirNombr(int jugadorNumero);
@@ -51,10 +60,6 @@ private:
     void pedirDimensionesJuego(int,int,unsigned int * dimensiones);
     unsigned int pedirCantidadCartasPorJugador() ;
     funcion_t getFuncionalidad(unsigned int indice);
-
-
-
-
 };
 
 
