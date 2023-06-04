@@ -142,7 +142,7 @@ void Interfaz::pedirCantidadJugadores() {
 
 
 void Interfaz::pedirCantidadFichas() {
-    std::cout << "\nIngrese la cantidad de fichas que tendra cada jugador (3 o mas): ";
+    std::cout << "\nIngrese la cantidad de fichas que tendra cada jugador (4 o mas): ";
 }
 
 
@@ -185,6 +185,9 @@ void Interfaz::informarCasilleroNoDisponible() {
     std::cout << "\nEl casillero elegido no esta disponible" << std::endl;
 }
 
+void Interfaz::informarMovimientoDeFicha(){
+    std::cout << "\n La ficha se ha movido con éxito." << std::endl;
+}
 
 void Interfaz::pedirCoordOrigenMoverFicha() {
     std::cout << "\nIngrese la posicion en el tablero de la ficha que desea mover: " << std::endl;
@@ -249,3 +252,4 @@ void Interfaz::mostrarJugadorEnTurno(std::string nombreDeJugador){
 void Interfaz::limpiarPantalla() {
     std::cout << "\033[H\033[2J\033[3J"; // CARACTER PARA LIMPIAR LA PANTALLA
 }
+

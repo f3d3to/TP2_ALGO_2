@@ -176,6 +176,10 @@ public:
 
     /*Post: imprime por pantalla el nombre del jugador*/
     void mostrarJugadorEnTurno(std::string nombreJugador);
+    /*
+     * Post: imprime un mensaje confirmando el movimiento realizado
+     */
+    void informarMovimientoDeFicha();
 };
 
 

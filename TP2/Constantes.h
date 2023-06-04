@@ -4,6 +4,7 @@
 #include <string>
 
 #define VACIO '.'
+enum TipoDeFicha { MINA, SOLDADO, ARMAMENTO };
 
 enum EstadoFicha {
     FICHA_DESBLOQUEADA,
