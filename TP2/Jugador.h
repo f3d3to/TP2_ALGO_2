@@ -12,11 +12,8 @@ class Jugador {
 
 private:
   std::string nombreJugador;
-  Lista<Ficha*> *minas;
-  Lista<Ficha*> *soldados;
-  Lista<Ficha*> *armamentos;
-  Lista<Ficha*> *barcos;
-  int cantidadFichas;
+  Lista<Ficha*>* ficha;
+  int cantidadSoldados;
   Lista<Carta *> *cartas;
   int contadorTurnos; // Cuando suma un turno, resta uno al contador_bloqueado
                        // de cada ficha
@@ -42,6 +39,7 @@ public:
   void setCartas(Lista<Carta*> *nuevasCartas);
   int getTurnos();
   void setTurnos(int nuevosTurnos);
+  
 };
 
 #endif /* JUGADOR.H */
