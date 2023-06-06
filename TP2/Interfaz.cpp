@@ -82,6 +82,65 @@ void Interfaz::mostrarGanador(std::string nombreGanador) {
 
 }
 
+void mostrarTableroDeJugador(Tablero *tablero, Jugador *jugador){
+    int dim[3];
+    dim[0] = t->getDimensiones()[0];
+    dim[1] = t->getDimensiones()[1];
+    dim[2] = t->getDimensiones()[2];
+
+    std::cout<<"\n\n";
+    for ( int f=0; f < dim[2]+2; ++f ) {
+		for (int g=0; g < dim[0]; ++g) {
+			cout << "**";
+		}
+    }
+    std::cout<<"\n\n";
+
+    std::cout<<"TABLERO: " <<  jugador->getNombre() <<std::endl;
+    for ( int k=0; k < dim[2]; ++k ) {
+
+        for ( int j=0; j < dim[1]; ++j ) {
+    		for ( int f=0; f < k+2; ++f ) {
+    			for ( int m=0; m < dim[0]*2-1; ++m ) {
+    				std::cout<<" ";
+    			}
+    		}
+
+            for ( int i=0; i < dim[0]; ++i ) {
+            	try {
+            		TipoDeFicha ficha = t->getCasillero(i, j, k)->getFicha()->getTipoDeFicha();
+                    if (ficha->getIdentificadorDeJugador() == jugador && ficha == MINA ){
+                        std::cout<<" M ";
+                    }
+                    else if (ficha->getIdentificadorDeJugador() == jugador && ficha == SOLDADO){
+                        std::cout<<" S ";
+                    }
+                    else if (ficha->getIdentificadorDeJugador() == jugador && ficha == ARMAMENTO){
+                        std::cout<<" A ";
+                    }
+                     else if (ficha->getIdentificadorDeJugador() == jugador && ficha == BARCO){
+                        std::cout<<" B ";
+                    }
+                    
+                }
+                catch (...) {
+                    std::cout<<" "<<"-";
+                }
+            }
+
+            std::cout<<"\n";
+        }
+    }
+    std::cout<<"\n\n";
+    for ( int f=0; f < dim[2]+2; ++f ) {
+		for (int g=0; g < dim[0]; ++g) {
+			cout << "**";
+		}
+    }
+    std::cout<<"\n\n";
+}
+
+};
 
 void Interfaz::mostrarTablero(Tablero * t) {
 

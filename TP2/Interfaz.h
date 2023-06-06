@@ -23,14 +23,14 @@ public:
      * Post: muestra en pantalla el simbolo de la ficha recibida sin dar
      * salto de línea al final
      */
-    void mostrarFicha(Ficha * ficha);
+    void mostrarFicha(Ficha *);
 
 
     /*
      * Pre: recibe un string con el nombre del Jugador que ha ganado el juego
      * Post: muestra un mensaje por pantalla indicando el nombre del ganador
      */
-    void mostrarGanador(std::string nombreGanador);
+    void mostrarGanador(std::string );
 
     /*
      * Pre: Recibe un tablero valido
@@ -47,20 +47,23 @@ public:
      * se mostrara por pantalla 2 planos xy pertenecientes a cada nivel de profundidad
      */
     void mostrarTablero(Tablero * );
-
+    
+    /*Pre: Recibe un tablero y un jugador
+    * Post: Muestra por pantalla el tablero del jugador.
+    */
+    void mostrarTableroDeJugador(Tablero *, Jugador *);
     /*
      * Pre: recibe el número de jugador al que corresponde el nombre
      * Post: pide por pantalla el nombre al jugador indicando su número
      * ejemplo: Jugador 1: Tomás, Jugador 2: Miguel, ett
      */
-    void pedirNombre(int jugadorNumero);
+    void pedirNombre(int);
 
     /*
      * Post: pide por pantalla la cantidad de Jugadores que tendra el Juego
      */
     void pedirCantidadJugadores();
 
-    void mostrarTableroDeJugador();
 
     /*
      * Post: pide por pantalla la cantidad de Fichas que tendra cada Jugador

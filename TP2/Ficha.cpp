@@ -2,9 +2,10 @@
 #include "Constantes.h"
 #include <string>
 
-Ficha::Ficha(TipoDeFicha tipoDeFicha, int identificador){
+Ficha::Ficha(TipoDeFicha tipoDeFicha, int numeroDeFicha, int indetificadorDeJugador){
     this->tipoDeFicha = tipoDeFicha;
-    this->identificador = identificador;
+    this->identificadorDeFicha= numeroDeFicha;
+    this->identificadorDeJugador= indentificadorDeJugador;
     this->estado = FICHA_DESBLOQUEADA;
 
 }
@@ -51,6 +52,14 @@ void Ficha::bloquear() {
 void Ficha::desbloquear() {
 
     this->estado = FICHA_DESBLOQUEADA;
+}
+
+int Ficha::getIdentificadorDeJugador(){
+    return this->identificadorDeJugador;
+}
+
+int  Ficha::getNumeroDeFicha(){
+    return this->numeroDeFicha;
 }
 
 

@@ -1,6 +1,6 @@
 {
     "workbench.iconTheme": "material-icon-theme",
-    // "clangd.path": "/home/junius/.config/VSCodium/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/15.0.6/clangd_15.0.6/bin/clangd",
+    "clangd.path": "/home/junius/.config/VSCodium/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/15.0.6/clangd_15.0.6/bin/clangd",
     "debug.onTaskErrors": "debugAnyway",
     "C_Cpp.intelliSenseEngine": "disabled",
     "[cpp]": {
@@ -8,7 +8,7 @@
           "source.fixAll": true,
         },
         "editor.formatOnSave": false,
-        // "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
       },
     "code-runner.clearPreviousOutput": true,
     "code-runner.preserveFocus": false,
