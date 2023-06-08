@@ -9,7 +9,11 @@
 
 
 int main() {
-    Juego juego = Juego();
+    Juego juego = Juego(
+
+
+        
+    );
     juego.jugarBatallaDigital();
     return 0;
 }

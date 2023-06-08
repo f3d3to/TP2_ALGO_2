@@ -8,15 +8,16 @@ class Ficha {
 private:
   EstadoFicha estado;
   TipoDeFicha tipoDeFicha;
-  int numeroDeFicha;
-  int identificadorDeJugador;
+  std::string identificadorDeJugador;
 
 public:
-  /* Pre: Recibe una char que representara el simbolo de la ficha.
-   Tambien recibe un identificador de tipo entero.
-   Post: crea una ficha con el tipo indicado e idenficador. Su estado es desbloqueado.
+  /* Pre: Recibe un tipo, numero e identificador de jugador.
+   Post: crea una ficha con el tipo indicado e idenficador. Su estado es
+   desbloqueado.
    */
-  Ficha(TipoDeFicha tipoDeFicha, int numeroDeFicha, int indetificadorDeJugador);
+  Ficha(TipoDeFicha tipoDeFicha, std::string indetificadorDeJugador);
+
+  Ficha(std::string indetificadorDeJugador);
 
   /* Pre: la fichaOriginal debe ser valida
    * Post: crea una ficha como copia de la ficha dada, y estado desbloqueado
@@ -32,6 +33,11 @@ public:
    * Post: devuelve el tipo de la Ficha
    **/
   TipoDeFicha getTipoDeFicha();
+
+  /*
+   * Post: setea el tipo de ficha
+   **/
+  void setTipoDeFicha(TipoDeFicha tipoDeFicha);
 
   /*
    * Post: devuelve true si los simbolos de la Ficha recibida es igual al
@@ -55,19 +61,16 @@ public:
   bool estaBloqueada();
 
   /*
-  *pre: Exista un atributo ficha
-  *post: devuelve el identificador de jugador de la ficha 
-  */
-  int getIdentificadorDeJugador();
+   *pre: Exista un atributo ficha
+   *post: devuelve el identificador de jugador de la ficha
+   */
+  std::string getIdentificadorDeJugador();
 
   /*
-  *pre: Exista un atributo ficha
-  *post: devuelve el numero de la ficha
-  */
-  int  getNumeroDeFicha();
-
-//private:
-  
+   *pre: Exista un atributo ficha
+   *post: devuelve el numero de la ficha
+   */
+  int getNumeroDeFicha();
 };
 
 #endif /* FICHA_H_ */
