@@ -1,36 +1,40 @@
 #include "Jugador.h"
 #include "Constantes.h"
+#include "Ficha.h"
 
-Jugador::Jugador(std::string nombreJugador, int cantidadDeFichas) {
+Jugador::Jugador(std::string nombreJugador) {
   this->nombreJugador = nombreJugador;
-  this->fichas = new Lista<Ficha*>;
-  this->cartas = new Lista<Carta*>;
-  this->cantidadSoldados = cantidadDeSoldados;
+  this->fichas = new Lista<Ficha *>;
+  this->cartas = new Lista<Carta *>;
+  this->cantidadSoldados = 0;
   this->contadorTurnos = 0;
+}
+
+Jugador::~Jugador() {
+  this->cartas->iniciarCursor();
+  while (this->cartas->avanzarCursor()) {
+    delete this->cartas->obtenerCursor();
+  }
+  while (this->fichas->avanzarCursor()) {
+    delete this->fichas->obtenerCursor();
+  }
+  delete this->cartas;
+  delete this->fichas;
 }
 
 std::string Jugador::getNombre() { return nombreJugador; }
 
-Ficha *Jugador::getFicha(TipoDeFicha tipoDeFicha, int numeroDeFicha) { 
-  fichas->iniciarCursor();
-  Ficha * fichaAux=NULL;
-  while (*fichas->avanzarCursor()) {
-    if(*fichas->obtenerCursor()->getTipoDeFicha() == tipoDeFicha && fichas->obtenerCursor()->getIdentificador() == numeroDeFicha)
-      fichaAux=fichas->obtenerCursor();
-  }
-  
-  return fichaAux; 
+Ficha *Jugador::getFicha() { return fichas->bajaAlFinal(); };
+
+Lista<Carta *> *Jugador::getCartas() { return cartas; }
+
+void Jugador::setCartas(Lista<Carta *> *nuevasCartas) {
+  this->cartas = nuevasCartas;
 }
-
-void Jugador::setFichas(Ficha *nuevaFicha);
-
-int Jugador::getCantidadFichas() { return cantidadFichas; }
-
-void Jugador::setCantidadFichas(int cantidad) { this->cantidadFichas = cantidad; }
-
-Lista<Carta *>* Jugador::getCartas() { return cartas; }
-
-void Jugador::setCartas(Lista<Carta*>* nuevasCartas) {this->cartas = nuevasCartas;}
 int Jugador::getTurnos() { return contadorTurnos; }
 
-void Jugador::setTurnos(int nuevosTurnos) {this->contadorTurnos = nuevosTurnos; }
+void Jugador::setTurnos(int nuevosTurnos) {
+  this->contadorTurnos = nuevosTurnos;
+}
+
+Lista<Ficha *> *Jugador::getFichas() { return this->fichas; }

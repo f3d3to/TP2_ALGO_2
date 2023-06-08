@@ -17,7 +17,11 @@ private:
 
 public:
     Carta(funcion_t funcion);
-    funcion_t getFuncion();
+    funcion_t getFuncion(
+
+
+        
+    );
     std::string getDescripcion();
 };
 

@@ -1,21 +1,23 @@
 {
-    "workbench.iconTheme": "material-icon-theme",
-    "clangd.path": "/home/junius/.config/VSCodium/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/15.0.6/clangd_15.0.6/bin/clangd",
-    "debug.onTaskErrors": "debugAnyway",
-    "C_Cpp.intelliSenseEngine": "disabled",
-    "[cpp]": {
-        "editor.codeActionsOnSave": {
-          "source.fixAll": true,
-        },
-        "editor.formatOnSave": false,
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-      },
-    "code-runner.clearPreviousOutput": true,
-    "code-runner.preserveFocus": false,
-    "code-runner.runInTerminal": true,
-    "code-runner.saveFileBeforeRun": true,
-    "code-runner.executorMap": {
-      "cpp": "\b\b\b\b\b\b\b\b\b\bg++ -Wall -pedantic -ansi -std=c++98 $fileName -o a.out && ./a.out"
+  "workbench.iconTheme": "material-icon-theme",
+  "clangd.path": "/home/brutus/.config/Code/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/16.0.2/clangd_16.0.2/bin/clangd",
+  "debug.onTaskErrors": "debugAnyway",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "[cpp]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true,
     },
-    "editor.codeActionsOnSave": { "source.fixAll": true }
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.preserveFocus": false,
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.executorMap": {
+    "cpp": "\b\b\b\b\b\b\b\b\b\bg++ -Wall -pedantic -ansi -std=c++98 $fileName -o a.out && ./a.out"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
 }

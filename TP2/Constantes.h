@@ -4,38 +4,13 @@
 #include <string>
 
 #define VACIO '.'
-enum TipoDeFicha { MINA, SOLDADO, ARMAMENTO };
 
-enum EstadoFicha {
-    FICHA_DESBLOQUEADA,
-    FICHA_BLOQUEADA
-};
+enum TipoDeFicha { MINA, SOLDADO, ARMAMENTO, BARCO };
 
-enum EstadoCasillero {
-    CASILLERO_BLOQUEADO,
-    CASILLERO_DESBLOQUEADO
-};
+enum EstadoFicha { FICHA_DESBLOQUEADA, FICHA_BLOQUEADA };
 
-enum TipoTerreno {
-    TIERRA,
-    AGUA,
-    AIRE
-};
+enum EstadoCasillero { CASILLERO_BLOQUEADO, CASILLERO_DESBLOQUEADO };
 
+enum TipoTerreno { TIERRA, AGUA, AIRE };
 
 #endif /* CONSTANTES_H_ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

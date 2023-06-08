@@ -12,34 +12,34 @@ class Jugador {
 
 private:
   std::string nombreJugador;
-  Lista<Ficha*>* ficha;
+  Lista<Ficha *> *fichas;
   int cantidadSoldados;
   Lista<Carta *> *cartas;
   int contadorTurnos; // Cuando suma un turno, resta uno al contador_bloqueado
-                       // de cada ficha
-  
+                      // de cada ficha
+
 public:
   /* Pre: recibe un string, una ficha valida y un entero mayor a 0
    * Post: inicializar atributos, crea maso de carta en memoria
    * */
-  Jugador(std::string nombreJugador, int cantidadDeFichas);
+  Jugador(std::string nombreJugador);
   /*
    * Post: libera toda la memoria solicitada*/
   ~Jugador();
 
   std::string getNombre();
-  Ficha * getFicha(TipoDeFicha tipoDeFicha);
-  void setFicha(Ficha *nuevaFicha);
+  Ficha *getFicha();
+  void setFicha(TipoDeFicha tipoDeFicha);
 
   int getCantidadFichas();
   void setCantidadFichas(int cantidad);
 
-  Lista<Carta*>* getCartas();
-  Carta * getUltimaCarta();
-  void setCartas(Lista<Carta*> *nuevasCartas);
+  Lista<Ficha *> *getFichas();
+  Lista<Carta *> *getCartas();
+  Carta *getUltimaCarta();
+  void setCartas(Lista<Carta *> *nuevasCartas);
   int getTurnos();
   void setTurnos(int nuevosTurnos);
-  
 };
 
 #endif /* JUGADOR.H */
