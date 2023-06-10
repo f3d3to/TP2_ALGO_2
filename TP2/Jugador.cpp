@@ -1,10 +1,8 @@
 #include "Jugador.h"
-#include "Constantes.h"
-#include "Ficha.h"
 
 Jugador::Jugador(std::string nombreJugador) {
   this->nombreJugador = nombreJugador;
-  this->fichas = new Lista<Ficha *>;
+  this->fichas = new Pila<Ficha *>;
   this->cartas = new Lista<Carta *>;
   this->cantidadSoldados = 0;
   this->contadorTurnos = 0;
@@ -12,11 +10,12 @@ Jugador::Jugador(std::string nombreJugador) {
 
 Jugador::~Jugador() {
   this->cartas->iniciarCursor();
+
   while (this->cartas->avanzarCursor()) {
     delete this->cartas->obtenerCursor();
   }
-  while (this->fichas->avanzarCursor()) {
-    delete this->fichas->obtenerCursor();
+  while (!this->fichas->estaVacia()) {
+    delete this->fichas->desapilar();
   }
   delete this->cartas;
   delete this->fichas;
@@ -24,7 +23,7 @@ Jugador::~Jugador() {
 
 std::string Jugador::getNombre() { return nombreJugador; }
 
-Ficha *Jugador::getFicha() { return fichas->bajaAlFinal(); };
+Ficha *Jugador::getFicha() { return fichas->desapilar(); };
 
 Lista<Carta *> *Jugador::getCartas() { return cartas; }
 
@@ -37,4 +36,4 @@ void Jugador::setTurnos(int nuevosTurnos) {
   this->contadorTurnos = nuevosTurnos;
 }
 
-Lista<Ficha *> *Jugador::getFichas() { return this->fichas; }
+Pila<Ficha *> *Jugador::getFichas() { return this->fichas; }

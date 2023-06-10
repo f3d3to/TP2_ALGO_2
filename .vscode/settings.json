@@ -7,7 +7,7 @@
     "editor.codeActionsOnSave": {
       "source.fixAll": true,
     },
-    "editor.formatOnSave": true,
+    // "editor.formatOnSave": true,
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
   "code-runner.clearPreviousOutput": true,

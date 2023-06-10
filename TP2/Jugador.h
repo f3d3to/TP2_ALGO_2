@@ -5,6 +5,7 @@
 #include "Constantes.h"
 #include "Ficha.h"
 #include "Lista.h"
+#include "Pila.h"
 #include <string>
 
 class Jugador {
@@ -12,7 +13,7 @@ class Jugador {
 
 private:
   std::string nombreJugador;
-  Lista<Ficha *> *fichas;
+  Pila<Ficha *> *fichas;
   int cantidadSoldados;
   Lista<Carta *> *cartas;
   int contadorTurnos; // Cuando suma un turno, resta uno al contador_bloqueado
@@ -34,7 +35,7 @@ public:
   int getCantidadFichas();
   void setCantidadFichas(int cantidad);
 
-  Lista<Ficha *> *getFichas();
+  Pila<Ficha *> *getFichas();
   Lista<Carta *> *getCartas();
   Carta *getUltimaCarta();
   void setCartas(Lista<Carta *> *nuevasCartas);

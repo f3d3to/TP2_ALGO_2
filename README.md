@@ -7,7 +7,7 @@ En este proyecto se trabajará en un juego: La batalla digital.
 Es un juego de mesa para N jugadores en el que se introducen M soldados/armamento por cada jugador en un tablero de X por Y por Z con el fin de que los soldados sobrevivan hasta el final.
 En cada turno el jugador saca una carta del mazo y ataca una posición del tablero con una mina, eliminando si hay un soldado o armamento en ella y
 dejando la casilla inactiva por tantos turnos dependiendo el poder de la mina, luego del disparo, el jugador puede optar por mover un soldado o armamento, ya sea horizontal, vertical o diagonal.
-Un soldado no se puede mover a una casilla inactiva y si se mueve a una casilla con un soldado contrario, se eliminan los 2 soldados.
+- [ ] Un soldado no se puede mover a una casilla inactiva y si se mueve a una casilla con un soldado contrario, se eliminan los 2 soldados.
 El juego termina cuando todos los jugadores menos uno se queda sin soldados, ganando el jugador con Soldados. Las cartas las pueden
 acumular o jugar. Hay 6 tipos de cartas, 3 establecidas por el enunciado y 3 por el grupo.
 La carta se juega al final de cada turno de cada jugador.
@@ -16,14 +16,13 @@ ataque químico, al atacar contamina 125 casilleros (5x5x5) por 10 turnos en el 
 el siguiente radio, y así. Un avión radar (si está en el aire puede detectar minas en su zona por
 cada turno) y un barco (si está en el agua puede disparar un misil una vez por cada turno,
 adicional a los disparos del turno).
-
 El terreno tiene 3 casilleros tipos de casilleros, uno es tierra, otro es agua y otro es aire.
 El nivel 1 a 5 del tablero es tierra o agua, y el resto de los niveles son aire.
 ## Interfaz de usuario
-Toda la interfaz de usuario debe estar basada en texto, la entrada y salida y el estado
+- [ ] Toda la interfaz de usuario debe estar basada en texto, la entrada y salida y el estado
 del tablero tiene que mostrarse utilizando un Bitmap (ver librería) de una manera ideada por el
 grupo.
-No es necesario que se limpie la pantalla, simplemente escribir el estado del tablero
+- [ ] No es necesario que se limpie la pantalla, simplemente escribir el estado del tablero
 luego de cada jugada.
 
 ## Cuestionario
