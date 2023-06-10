@@ -187,6 +187,8 @@ public:
     void informarMovimientoDeFicha();
 
     void mostrarCartasJugador(Jugador *jugador);
+
+    void mazoSinCartas();
 };
 
 

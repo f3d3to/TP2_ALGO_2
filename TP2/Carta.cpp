@@ -5,8 +5,9 @@ std::string funcionalidades[6] = {
     "Detecta minas en cada turno",
     "Si esta en el agua, puede disparar un misil una vez por turno",
     "Se incorpora un soldado",
-    "El jugador puede proteger una zona de 10 casilleros por 5 turnos",
-    "Protege a 125 casilleros por 10 turnos del ataque quimico"};
+    "Puede tirar 3 minas por el turno en el que se usa",
+    "Permite seleccionar una ficha e identificar si es de un enemigo"
+};
 
 Carta::Carta(funcion_t funcion) { this->funcion = funcion; }
 

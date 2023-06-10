@@ -1,4 +1,5 @@
 #include "Juego.h"
+#include "Carta.h"
 #include "Constantes.h"
 
 Juego::Juego() {
@@ -202,12 +203,12 @@ funcion_t Juego::getFuncionalidad(unsigned int indice) {
     return AVION_RADAR;
   case BARCO_MISIL:
     return BARCO_MISIL;
-  case REFUERZOS:
-    return REFUERZOS;
-  case ESCUDO:
-    return ESCUDO;
-  case MASCARA_ANTIGAS:
-    return MASCARA_ANTIGAS;
+  case REFUERZO:
+    return REFUERZO;
+  case BOMBARDEO:
+    return BOMBARDEO;
+  case ESPIONAJE:
+    return ESPIONAJE;
   };
 
   throw "Numero de carta no valido";
@@ -317,60 +318,145 @@ void Juego::colocarMina(int x, int y, int z) {
   Jugador *jugador = this->jugadorEnTurno;
   Casillero *casillero = this->tablero->getCasillero(x, y, z);
   Ficha *fichaEnCasillero = casillero->getFicha();
-  Ficha *fichaAColocar = jugadorEnTurno->getFicha();
-
-  if (casillero->obtenerTerreno() == TIERRA &&
-      (fichaEnCasillero->getIdentificadorDeJugador() !=
-           jugadorEnTurno->getNombre() ||
-       casillero->estaVacio()) &&
-      !casillero->estaBloqueado()) {
-
-    if (fichaEnCasillero->getTipoDeFicha() == MINA) {
-      casillero->bloquear();
-      this->matarFicha(casillero);
-    } else {
-      casillero->bloquear();
-      this->matarFicha(casillero);
-      delete fichaAColocar;
+  Ficha *mina = new Ficha(MINA, jugador->getNombre());
+  try {
+    if (casillero->obtenerTerreno() == TIERRA &&
+        (fichaEnCasillero->getIdentificadorDeJugador() !=
+             jugadorEnTurno->getNombre() ||
+         casillero->estaVacio()) &&
+        !casillero->estaBloqueado()) {
+      if (fichaEnCasillero->getTipoDeFicha() == MINA) {
+        casillero->bloquear();
+        this->matarFicha(casillero);
+      } else {
+        // fichaEnCasillero es un soldado o armemento
+        casillero->bloquear();
+        this->matarFicha(casillero);
+        delete mina;
+      }
     }
+  } catch (...) {
+    this->interfaz->informarCasilleroNoDisponible();
   }
 }
-void Juego::colocarSoldado(int x, int y, int z) {
-
+/*Pre: HAY QUE DESAPILAR LA PILA DE FICHAS Y CREAR EL SOLDADO ANTES DE LLAMAR A ESTA FUNCION
+* Post:verifica y coloca el soldado.
+*/
+void Juego::colocarSoldado(int x, int y, int z , Ficha *soldado) {
   Jugador *jugador = this->jugadorEnTurno;
   Casillero *casillero = this->tablero->getCasillero(x, y, z);
   Ficha *fichaEnCasillero = casillero->getFicha();
-  Ficha *fichaAColocar = jugadorEnTurno->getFicha();
 
-  if (casillero->obtenerTerreno() == TIERRA &&
-      (fichaEnCasillero->getIdentificadorDeJugador() !=
-           jugadorEnTurno->getNombre() ||
-       casillero->estaVacio()) &&
-      !casillero->estaBloqueado()) {
+  try {
+    if (casillero->obtenerTerreno() == TIERRA &&
+        (fichaEnCasillero->getIdentificadorDeJugador() !=
+             jugadorEnTurno->getNombre() ||
+         casillero->estaVacio()) &&
+        !casillero->estaBloqueado()) {
 
-    if (fichaEnCasillero->getTipoDeFicha() == SOLDADO &&
-        fichaAColocar->getTipoDeFicha() == SOLDADO) {
-      this->matarFicha(casillero);
-      delete fichaAColocar;
+      if (fichaEnCasillero->getTipoDeFicha() == SOLDADO) {
+        this->matarFicha(casillero);
+        delete soldado;
 
-    } else if (fichaEnCasillero->getTipoDeFicha() == MINA) {
-      casillero->bloquear();
-      this->matarFicha(casillero);
+      } else if (fichaEnCasillero->getTipoDeFicha() == MINA) {
+        casillero->bloquear();
+        this->matarFicha(casillero);
 
-    } else if (fichaEnCasillero->getTipoDeFicha() == ARMAMENTO) {
-      casillero->bloquear();
-      this->matarFicha(casillero);
-      delete fichaAColocar;
+      } else if (fichaEnCasillero->getTipoDeFicha() == ARMAMENTO) {
+        casillero->bloquear();
+        this->matarFicha(casillero);
+        delete soldado;
 
-    } else {
-      casillero->setFicha(fichaAColocar);
+      } else {
+        casillero->setFicha(soldado);
+      }
     }
+  } catch (...) {
+    this->interfaz->informarCasilleroNoDisponible();
   }
 };
 
-/* TODO */
-void moverSoldado(){
+/* Pre: recibe una coordenada de origen y de destino.
+  Post: mueve el soldado a un casillero adyacente
+ */
+void Juego::moverSoldado(int x1, int y1, int z1, int x2, int y2, int z2) {
 
+  Jugador *jugador = this->jugadorEnTurno;
+  Casillero *casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
+  Casillero *casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
+
+  try {
+    if (casilleroOrigen->getFicha()->getTipoDeFicha() == SOLDADO &&
+        casilleroOrigen->getFicha()->getIdentificadorDeJugador() == jugador->getNombre()) {
+          if(casilleroDestino->esAdyacenteLineal(casilleroOrigen)){
+            this->colocarSoldado(x2, y2, z2, casilleroOrigen->getFicha());
+            casilleroOrigen->setFicha(NULL);
+          }
+    }
+  } catch (...) {
+    this->interfaz->ingresoInvalido(); 
+  }
+
+};
+
+/* Pre: 
+  Post: Agrega una carta al mazo del jugador (lista)
+ */
+
+void Juego::sacarCartaDeMazo(Jugador *jugador){
+  
+  try {
+    if (!mazo->estaVacia()) {
+      Carta *carta = mazo->desapilar();
+      jugador->getCartas()->altaFinal(carta);
+    }
+  } catch (...) {
+    this->interfaz->mazoSinCartas();
+  }
+  
+};
+void Juego::ejecutarCarta(unsigned int indice) {
+
+  switch (indice) {
+  case ATAQUE_QUIMICO:
+      //this->ataqueQuimico();
+  case AVION_RADAR:
+      // this->
+
+
+  case BARCO_MISIL:
+
+  case REFUERZO:
+
+  case BOMBARDEO:
+    
+  case ESPIONAJE:
+
+  };
+  
+  throw "Numero de carta no valido";
+}
+
+void Juego::usarCartaDeJugador(funcion_t funcion, Jugador *jugador){
+  this->interfaz->mostrarCartasJugador(jugador);
+  this->interfaz->preguntarNroCarta();
+  unsigned int numero = this->interfaz->pedirNroCarta();
+
+  try {
+    if(!jugador->getCartas()->estaVacia()){
+    jugador->getCartas()->iniciarCursor();
+    while(jugador->getCartas()->avanzarCursor()){
+      if(jugador->getCartas()->obtenerCursor()->getFuncion()==funcion){
+        Carta *cartaAux=jugador->getCartas()->obtenerCursor();
+        this->ejecutarCarta(cartaAux->getFuncion());
+        jugador->getCartas()->remover(numero);
+      }
+    }
+  }
+  } catch (...) {
+    this->interfaz->mazoSinCartas();
+  }
+  
 };
 
 void Juego::jugarBatallaDigital() {

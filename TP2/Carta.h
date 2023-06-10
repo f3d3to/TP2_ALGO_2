@@ -6,9 +6,9 @@ typedef enum {
     ATAQUE_QUIMICO,
     AVION_RADAR,
     BARCO_MISIL,
-    REFUERZOS,
-    ESCUDO,
-    MASCARA_ANTIGAS
+    REFUERZO,
+    BOMBARDEO,
+    ESPIONAJE
 } funcion_t;
 
 class Carta {

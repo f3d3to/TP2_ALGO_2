@@ -54,7 +54,10 @@ public:
   void matarFicha(Casillero *casillero);
   void colocarFicha(int x, int y, int z, TipoDeFicha tipo);
   void colocarMina(int x, int y, int z);
-  void colocarSoldado(int x, int y, int z);
+  void colocarSoldado(int x, int y, int z, Ficha *soldado);
+  void moverSoldado(int x1, int y1, int z1, int x2, int y2, int z2);
+  void sacarCartaDeMazo(Jugador *jugador);
+  void usarCartaDeJugador(funcion_t , Jugador *jugador);
 
 private:
   unsigned int soldadosDeJugadorEnTablero(Jugador *jugador);
@@ -65,6 +68,8 @@ private:
   unsigned int pedirCantidadCartas();
   funcion_t getFuncionalidad(unsigned int indice);
   Ficha *ponerFicha(Jugador *jugador, TipoDeFicha tipo);
+  void ejecutarCarta(unsigned int indice);
+
 };
 
 #endif /* JUEGO_H_ */
