@@ -41,6 +41,7 @@ public:
   void setCartas(Lista<Carta *> *nuevasCartas);
   int getTurnos();
   void setTurnos(int nuevosTurnos);
+
 };
 
 #endif /* JUGADOR.H */

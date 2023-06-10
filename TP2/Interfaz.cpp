@@ -316,6 +316,10 @@ void Interfaz::jugadorSinCartas() {
     std::cout << "\nNo tienes cartas para usar." << std::endl;
 }
 
+void Interfaz::mazoSinCartas() {
+    std::cout << "\nEl mazo no tiene mas cartas." << std::endl;
+}
+
 
 void Interfaz::ingresoInvalido() {
     std::cout << "\nEl valor ingresado es invalido, vuelva a intentar" << std::endl;
