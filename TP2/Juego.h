@@ -53,6 +53,7 @@ public:
   Ficha *agregarSoldado(TipoDeFicha tipo);
 
 private:
+  unsigned int soldadosDeJugadorEnTablero(Jugador *jugador);
   std::string pedirNombr(int jugadorNumero);
   unsigned int pedirCantidadJugadores();
   unsigned int pedirCantidadFichas();

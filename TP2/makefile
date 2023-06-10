@@ -29,6 +29,12 @@ ficha.o: Ficha.cpp  Ficha.h
 carta.o: Carta.cpp  Carta.h 
 	$(CC) $(CFLAGS) -o carta.o  -c Carta.cpp
 
+jugador.o: jugador.cpp  jugador.h 
+	$(CC) $(CFLAGS) -o jugador.o  -c jugador.cpp
+
+juego.o: juego.cpp  juego.h 
+	$(CC) $(CFLAGS) -o juego.o  -c juego.cpp
+
 
 #Make Clear
 

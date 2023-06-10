@@ -45,7 +45,7 @@ void Interfaz::mostrarControles( Tablero * t ) {
 
             for ( int i=1; i < dim[0]+1; ++i ) {
             	try {
-            		char simbolo = t->getCasillero(i-1, j-1, k-1)->getFicha()->getSimbolo();
+            		char simbolo = t->getCasillero(i-1, j-1, k-1)->getFicha()->getTipoDeFicha();
                     std::cout<<"  "<<simbolo<<"  ";
                 }
                 catch (...) {
@@ -69,7 +69,20 @@ void Interfaz::mostrarControles( Tablero * t ) {
 
 
 void Interfaz::mostrarFicha(Ficha * ficha) {
-    cout << ficha->getSimbolo();
+
+    if (ficha->getTipoDeFicha() == MINA){
+        cout << 'M' ;
+    }
+    if (ficha->getTipoDeFicha() == BARCO){
+        cout << 'B' ;
+    }
+    if (ficha->getTipoDeFicha() == SOLDADO){
+        cout << 'S' ;
+    }
+    if (ficha->getTipoDeFicha() == ARMAMENTO){
+        cout << 'A' ;
+    }
+    
 }
 
 
@@ -84,9 +97,9 @@ void Interfaz::mostrarGanador(std::string nombreGanador) {
 
 void mostrarTableroDeJugador(Tablero *tablero, Jugador *jugador){
     int dim[3];
-    dim[0] = t->getDimensiones()[0];
-    dim[1] = t->getDimensiones()[1];
-    dim[2] = t->getDimensiones()[2];
+    dim[0] = tablero->getDimensiones()[0];
+    dim[1] = tablero->getDimensiones()[1];
+    dim[2] = tablero->getDimensiones()[2];
 
     std::cout<<"\n\n";
     for ( int f=0; f < dim[2]+2; ++f ) {
@@ -108,17 +121,17 @@ void mostrarTableroDeJugador(Tablero *tablero, Jugador *jugador){
 
             for ( int i=0; i < dim[0]; ++i ) {
             	try {
-            		TipoDeFicha ficha = t->getCasillero(i, j, k)->getFicha()->getTipoDeFicha();
-                    if (ficha->getIdentificadorDeJugador() == jugador && ficha == MINA ){
+            		Ficha* ficha = tablero->getCasillero(i, j, k)->getFicha();
+                    if (ficha->getIdentificadorDeJugador() == jugador->getNombre() && ficha->getTipoDeFicha() == MINA ){
                         std::cout<<" M ";
                     }
-                    else if (ficha->getIdentificadorDeJugador() == jugador && ficha == SOLDADO){
+                    else if (ficha->getIdentificadorDeJugador() == jugador->getNombre() && ficha->getTipoDeFicha() == SOLDADO){
                         std::cout<<" S ";
                     }
-                    else if (ficha->getIdentificadorDeJugador() == jugador && ficha == ARMAMENTO){
+                    else if (ficha->getIdentificadorDeJugador() == jugador->getNombre() && ficha->getTipoDeFicha() == ARMAMENTO){
                         std::cout<<" A ";
                     }
-                     else if (ficha->getIdentificadorDeJugador() == jugador && ficha == BARCO){
+                     else if (ficha->getIdentificadorDeJugador() == jugador->getNombre() && ficha->getTipoDeFicha() == BARCO){
                         std::cout<<" B ";
                     }
                     
@@ -138,9 +151,10 @@ void mostrarTableroDeJugador(Tablero *tablero, Jugador *jugador){
 		}
     }
     std::cout<<"\n\n";
+
 }
 
-};
+
 
 void Interfaz::mostrarTablero(Tablero * t) {
 
@@ -169,8 +183,9 @@ void Interfaz::mostrarTablero(Tablero * t) {
 
             for ( int i=0; i < dim[0]; ++i ) {
             	try {
-            		char simbolo = t->getCasillero(i, j, k)->getFicha()->getSimbolo();
-                    std::cout<<" "<<simbolo<<"";
+                    std::cout<< " " ;
+                    this->mostrarFicha(t->getCasillero(i, j, k)->getFicha());
+                    std::cout<< "";
                 }
                 catch (...) {
                     std::cout<<" "<<"-";
@@ -279,16 +294,18 @@ void Interfaz::tocaMoverFicha(std::string nombreJugador, char simbolo, std::stri
                 <<simbolo<<"  -  Color: "<<color<<")." << std::endl;
 }
 
-/*
-void Interfaz::mostrarCartasJugador(std::string nombreJugador, Lista<Carta*> * cartas) {
-    std::cout << "\n"<<nombreJugador<<" tus cartas son: ";
+
+void Interfaz::mostrarCartasJugador(Jugador *jugador){
+
+    std::cout << "\n"<<jugador->getNombre()<<" tus cartas son: ";
+    Lista<Carta *> *cartas = jugador->getCartas();
     cartas->iniciarCursor();
     while ( cartas->avanzarCursor() ) {
         Carta * carta = cartas->obtenerCursor();
-        std::cout << "\n\t"<<carta->getFuncionalidad()+1<<" : "<<carta->getDescripcion();
+        std::cout << "\n\t" <<carta->getDescripcion() << "\n";
     }
 }
-*/
+
 
 void Interfaz::jugadorNoTieneCartaElegida() {
 	std::cout << "\nNo tienes la carta que elegiste usar." << std::endl;
