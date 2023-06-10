@@ -112,7 +112,7 @@ unsigned int Juego::pedirCantidadFichas() {
     try {
       std::cin >> cantidadFichas;
       if (cantidadFichas < 4) {
-        throw "Error menos de 4 ficha";
+        throw "Error menos de 4 fichas";
       }
       cantidadValida = true;
     } catch (...) { // En caso de que ingrese un valor inválido se le indica al
@@ -203,8 +203,8 @@ funcion_t Juego::getFuncionalidad(unsigned int indice) {
     return ATAQUE_QUIMICO;
   case AVION_RADAR:
     return AVION_RADAR;
-  case BARCO:
-    return BARCO;
+  case BARCO_MISIL:
+    return BARCO_MISIL;
   case REFUERZOS:
     return REFUERZOS;
   case ESCUDO:
@@ -263,12 +263,21 @@ void Juego::moverSoldado() {
   }
 }
 
-unsigned int Juego::contarSoldadosEnTablero(Jugador jugador) {
-  // contador soldados de jugador=0
-  // reccorer tablero
-  // chequear cada casillero si hay una ficha que sea soldado
-  // si hya contador ++
-  // devolver cantidad de soldados del jugador
+unsigned int Juego::soldadosDeJugadorEnTablero(Jugador *jugador) {
+
+  unsigned int contador = 0 ;
+    for (unsigned int k = 0; k < tablero->getDimensiones()[2]; k++) {
+        for (unsigned int j = 0; j < tablero->getDimensiones()[1]; j++) {
+            for (unsigned int i = 0; i < tablero->getDimensiones()[0]; i++) {
+                Casillero* casillero = tablero->getCasillero(i, j, k);
+                if (!casillero->estaVacio() && casillero->getFicha()->getIdentificadorDeJugador() == jugador->getNombre()) {
+                    contador++;
+                }
+            }
+        }
+    }
+  return contador;
+  
 }
 
 void Juego::jugarBatallaDigital() {

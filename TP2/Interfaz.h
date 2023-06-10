@@ -6,6 +6,8 @@
 #include "Tablero.h"
 #include "Carta.h"
 #include "Lista.h"
+#include "Jugador.h"
+#include "Carta.h"
 
 using namespace std;
 
@@ -183,6 +185,8 @@ public:
      * Post: imprime un mensaje confirmando el movimiento realizado
      */
     void informarMovimientoDeFicha();
+
+    void mostrarCartasJugador(Jugador *jugador);
 };
 
 

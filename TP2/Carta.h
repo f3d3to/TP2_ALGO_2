@@ -5,7 +5,7 @@
 typedef enum {
     ATAQUE_QUIMICO,
     AVION_RADAR,
-    BARCO,
+    BARCO_MISIL,
     REFUERZOS,
     ESCUDO,
     MASCARA_ANTIGAS
@@ -17,11 +17,7 @@ private:
 
 public:
     Carta(funcion_t funcion);
-    funcion_t getFuncion(
-
-
-        
-    );
+    funcion_t getFuncion();
     std::string getDescripcion();
 };
 
