@@ -2,11 +2,24 @@
 #include "Constantes.h"
 #include <string>
 
+Ficha::Ficha() {
+  this->tipoDeFicha = NO_DEFINIDA;
+  this->identificadorDeJugador = "";
+  this->estado = FICHA_DESBLOQUEADA;
+}
 Ficha::Ficha(TipoDeFicha tipoDeFicha, std::string identificadorDeJugador) {
   this->tipoDeFicha = tipoDeFicha;
   this->identificadorDeJugador = identificadorDeJugador;
   this->estado = FICHA_DESBLOQUEADA;
 }
+
+Ficha::Ficha(std::string identificadorDeJugador) {
+  this->tipoDeFicha = NO_DEFINIDA;
+  this->identificadorDeJugador = identificadorDeJugador;
+  this->estado = FICHA_DESBLOQUEADA;
+}
+
+Ficha::~Ficha() {}
 
 Ficha::Ficha(Ficha *ficha) {
   this->tipoDeFicha = ficha->getTipoDeFicha();

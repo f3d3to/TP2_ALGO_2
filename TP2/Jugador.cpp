@@ -23,8 +23,7 @@ Jugador::~Jugador() {
 
 std::string Jugador::getNombre() { return nombreJugador; }
 
-Ficha *Jugador::getFicha() { return fichas->desapilar(); };
-
+Ficha *Jugador::getFicha() { return fichas->desapilar(); }
 Lista<Carta *> *Jugador::getCartas() { return cartas; }
 
 void Jugador::setCartas(Lista<Carta *> *nuevasCartas) {
