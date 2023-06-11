@@ -10,11 +10,12 @@ private:
   Casillero ****casillerosAdyacentes;
   EstadoCasillero estado;
   TipoTerreno terreno;
+  int contadorDeTurno;
 
 public:
   /*
    * Post: crea un Casillero con la Ficha vacia e inicializa
-   * sus 27 casillerosAdyacentes
+   * sus 26 casillerosAdyacentes
    */
   Casillero();
 
@@ -108,6 +109,8 @@ public:
    *Post: devuelve verdadero si el casillero no posee una ficha
    */
   bool estaVacio();
+
+  void envenenar();
 
   TipoTerreno obtenerTerreno() const { return terreno; }
 

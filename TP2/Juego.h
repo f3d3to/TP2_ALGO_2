@@ -4,6 +4,7 @@
 #include "Carta.h"
 #include "Cola.h"
 #include "Constantes.h"
+#include "Ficha.h"
 #include "Interfaz.h"
 #include "Jugador.h"
 #include "Tablero.h"
@@ -17,11 +18,13 @@ private:
   Lista<Jugador *> *jugadores;
   Pila<Carta *> *mazo;
   Jugador *jugadorEnTurno;
-  Jugador *ganador;
+  Jugador *hayGanador;
   Tablero *tablero;
   Interfaz *interfaz;
   unsigned int cantidadMaximaCartas;
+  unsigned int cantidadTurnosJuego;
   Estado estadoActual;
+  int turno;
 
 public:
   Juego();
@@ -43,7 +46,6 @@ public:
   void mostrarEstadoDeTurno();
 
   /* Post: ejecuta la accion del jugador */
-  void moverSoldado();
   void ejecutarAtaque();
   /* Pre:Exista una clase juego previamente.
      Post:inicia la logica del juego batalla digital.
@@ -57,7 +59,14 @@ public:
   void colocarSoldado(int x, int y, int z, Ficha *soldado);
   void moverSoldado(int x1, int y1, int z1, int x2, int y2, int z2);
   void sacarCartaDeMazo(Jugador *jugador);
-  void usarCartaDeJugador(funcion_t , Jugador *jugador);
+  void usarCartaDeJugador(Jugador *jugador);
+  unsigned int pedirNroCarta(Jugador *jugador);
+  void ataqueQuimico();
+  void colocarAvion();
+  void colocarBarco();
+  void agregarTresMinas();
+  void agregarSoldado();
+  void identificarFichaEnCasillero();
 
 private:
   unsigned int soldadosDeJugadorEnTablero(Jugador *jugador);
@@ -69,7 +78,6 @@ private:
   funcion_t getFuncionalidad(unsigned int indice);
   Ficha *ponerFicha(Jugador *jugador, TipoDeFicha tipo);
   void ejecutarCarta(unsigned int indice);
-
 };
 
 #endif /* JUEGO_H_ */

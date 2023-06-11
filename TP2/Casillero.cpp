@@ -136,6 +136,8 @@ void Casillero::bloquear() { this->estado = CASILLERO_BLOQUEADO; }
 
 void Casillero::desbloquear() { this->estado = CASILLERO_DESBLOQUEADO; }
 
+void Casillero::envenenar() { this->estado = CASILLERO_ENVENENADO; }
+
 bool Casillero::tienenMismaFicha(Casillero *casilleroAdyacente) {
 
   return (this->ficha->esIgual(casilleroAdyacente->getFicha()));

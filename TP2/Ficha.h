@@ -11,13 +11,13 @@ private:
   std::string identificadorDeJugador;
 
 public:
+  Ficha();
   /* Pre: Recibe un tipo, numero e identificador de jugador.
    Post: crea una ficha con el tipo indicado e idenficador. Su estado es
    desbloqueado.
    */
   Ficha(TipoDeFicha tipoDeFicha, std::string indetificadorDeJugador);
-
-  Ficha(std::string indetificadorDeJugador);
+  Ficha(std::string identificadorDeJugador);
 
   /* Pre: la fichaOriginal debe ser valida
    * Post: crea una ficha como copia de la ficha dada, y estado desbloqueado
