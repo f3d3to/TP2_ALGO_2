@@ -34,14 +34,13 @@ public:
 
   int getCantidadFichas();
   void setCantidadFichas(int cantidad);
-
-  Pila<Ficha *> *getFichas();
+  void setFichas(Pila<Ficha *> *nuevasFichas);
+  Pila<Ficha *> *getPilaFichas();
   Lista<Carta *> *getCartas();
   Carta *getUltimaCarta();
   void setCartas(Lista<Carta *> *nuevasCartas);
   int getTurnos();
   void setTurnos(int nuevosTurnos);
-
 };
 
 #endif /* JUGADOR.H */

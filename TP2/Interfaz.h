@@ -16,6 +16,7 @@ public:
    * del mismo y dando bienvenida al usuario
    */
   void mostrarPantallaInicial();
+  void mostrarBatallaIniciada();
 
   /*
    * Post: muestra en pantalla el simbolo de la ficha recibida sin dar
@@ -73,8 +74,8 @@ public:
   void pedirDimensiones();
 
   /*
-   * Post: imprime un mensaje de error indicando al usuario que el tablero debe
-   * ser mas grande
+   * Post: imprime un mensaje de error indicando al usuario que el tablero
+   * debe ser mas grande
    */
   void tableroChico();
 
@@ -83,6 +84,12 @@ public:
    * cada jugador
    */
   void pedirCantidadCartas();
+  void pedirUsarCarta();
+  void indicarColocarMina();
+  void indicarMoverSolado();
+  void indicarMoverArmamento();
+  void mostrarFinDelJuego();
+  void mostrarTableroDeJugadorBitMap(Tablero *tablero, Jugador *jugador);
 
   /*
    * Post: pide por pantalla la posicion de la ficha a bloquear
@@ -129,8 +136,8 @@ public:
   void pedirCoordDestinoMoverFicha();
 
   /*
-   * Post: imprime un mensaje preguntado al usuario si quiere utilizar alguna de
-   * sus cartas
+   * Post: imprime un mensaje preguntado al usuario si quiere utilizar alguna
+   * de sus cartas
    */
   void preguntarUsarCarta();
 
@@ -169,8 +176,8 @@ public:
   void jugadorNoTieneCartaElegida();
 
   /*
-   * Post: imprime por pantalla un mensaje indicando al usuario que el mismo no
-   * posee cartas en su mano
+   * Post: imprime por pantalla un mensaje indicando al usuario que el mismo
+   * no posee cartas en su mano
    */
   void jugadorSinCartas();
 

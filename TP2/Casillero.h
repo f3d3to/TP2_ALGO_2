@@ -72,6 +72,7 @@ public:
    * Post: devuelve el casillero adyacente que esta en la matriz de adyacentes
    */
   Casillero *getAdyacente(unsigned int i, unsigned int j, unsigned int k);
+  EstadoCasillero getEstado();
 
   /*
    * Pre: recibe coordenadas i,j,k entre 0 y 2
@@ -92,6 +93,7 @@ public:
    * Post: devuelve True si estado = bloqueado
    */
   bool estaBloqueado();
+  bool estaEnvenenado();
 
   /*
    * Pre: -
@@ -109,6 +111,10 @@ public:
    *Post: devuelve verdadero si el casillero no posee una ficha
    */
   bool estaVacio();
+
+  void setContadorDeTurnos(int turnos);
+  int getContadorDeturnos();
+  void bajarTurno();
 
   void envenenar();
 

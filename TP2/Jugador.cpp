@@ -1,4 +1,5 @@
 #include "Jugador.h"
+#include <iostream>
 
 Jugador::Jugador(std::string nombreJugador) {
   this->nombreJugador = nombreJugador;
@@ -22,8 +23,22 @@ Jugador::~Jugador() {
 }
 
 std::string Jugador::getNombre() { return nombreJugador; }
+void Jugador::setFichas(Pila<Ficha *> *nuevasFichas) {
+  // Limpia la pila de fichas existente
+  while (!fichas->estaVacia()) {
+    delete fichas->desapilar();
+  }
+  delete fichas;
 
-Ficha *Jugador::getFicha() { return fichas->desapilar(); }
+  // Asigna la nueva pila de fichas
+  fichas = nuevasFichas;
+}
+Ficha *Jugador::getFicha() {
+  if (fichas->estaVacia()) {
+    std::cout << "ESTA VACIA LA PILA" << std::endl;
+  }
+  return fichas->desapilar();
+}
 Lista<Carta *> *Jugador::getCartas() { return cartas; }
 
 void Jugador::setCartas(Lista<Carta *> *nuevasCartas) {
@@ -35,4 +50,4 @@ void Jugador::setTurnos(int nuevosTurnos) {
   this->contadorTurnos = nuevosTurnos;
 }
 
-Pila<Ficha *> *Jugador::getFichas() { return this->fichas; }
+Pila<Ficha *> *Jugador::getPilaFichas() { return this->fichas; }

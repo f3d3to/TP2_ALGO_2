@@ -4,7 +4,7 @@
 
 Ficha::Ficha() {
   this->tipoDeFicha = NO_DEFINIDA;
-  this->identificadorDeJugador = "";
+  this->identificadorDeJugador = " ";
   this->estado = FICHA_DESBLOQUEADA;
 }
 Ficha::Ficha(TipoDeFicha tipoDeFicha, std::string identificadorDeJugador) {
@@ -17,6 +17,19 @@ Ficha::Ficha(std::string identificadorDeJugador) {
   this->tipoDeFicha = NO_DEFINIDA;
   this->identificadorDeJugador = identificadorDeJugador;
   this->estado = FICHA_DESBLOQUEADA;
+}
+
+Ficha &Ficha::operator=(const Ficha &otraFicha) {
+  if (this == &otraFicha) {
+    return *this; // Evita la asignación a sí mismo
+  }
+
+  // Copia los atributos de la otra ficha
+  estado = otraFicha.estado;
+  tipoDeFicha = otraFicha.tipoDeFicha;
+  identificadorDeJugador = otraFicha.identificadorDeJugador;
+
+  return *this;
 }
 
 Ficha::~Ficha() {}

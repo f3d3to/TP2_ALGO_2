@@ -14,7 +14,7 @@
 typedef enum { ENCURSO, FINALIZADO } Estado;
 class Juego {
 
-private:
+public:
   Lista<Jugador *> *jugadores;
   Pila<Carta *> *mazo;
   Jugador *jugadorEnTurno;
@@ -24,9 +24,9 @@ private:
   unsigned int cantidadMaximaCartas;
   unsigned int cantidadTurnosJuego;
   Estado estadoActual;
+  unsigned int cantidadDeFichas;
   int turno;
 
-public:
   Juego();
 
   ~Juego();
@@ -44,22 +44,20 @@ public:
 
   /* Post: muestra el estado del juego */
   void mostrarEstadoDeTurno();
-
   /* Post: ejecuta la accion del jugador */
   void ejecutarAtaque();
   /* Pre:Exista una clase juego previamente.
      Post:inicia la logica del juego batalla digital.
   */
-  void jugarBatallaDigital();
-  Ficha *agregarSoldado(TipoDeFicha tipo);
   Jugador *validarSiHayGanador(Lista<Jugador *> *jugadores);
   void matarFicha(Casillero *casillero);
-  void colocarFicha(int x, int y, int z, TipoDeFicha tipo);
+  void colocarArmamento(int x, int y, int z, Ficha *soldado);
   void colocarMina(int x, int y, int z);
   void colocarSoldado(int x, int y, int z, Ficha *soldado);
   void moverSoldado(int x1, int y1, int z1, int x2, int y2, int z2);
+  void moverArmamento(int x1, int y1, int z1, int x2, int y2, int z2);
   void sacarCartaDeMazo(Jugador *jugador);
-  void usarCartaDeJugador(Jugador *jugador);
+  void usarCartaDeJugador(unsigned int posicionDeCarta);
   unsigned int pedirNroCarta(Jugador *jugador);
   void ataqueQuimico();
   void colocarAvion();
@@ -67,8 +65,9 @@ public:
   void agregarTresMinas();
   void agregarSoldado();
   void identificarFichaEnCasillero();
+  void bajarContadorCasilleros();
 
-private:
+  void inicializarFichas();
   unsigned int soldadosDeJugadorEnTablero(Jugador *jugador);
   std::string pedirNombr(int jugadorNumero);
   unsigned int pedirCantidadJugadores();

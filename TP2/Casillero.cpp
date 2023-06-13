@@ -1,5 +1,6 @@
 #include "Casillero.h"
-
+#include "Constantes.h"
+#include <iostream>
 Casillero::Casillero() {
   this->ficha = NULL;
   this->estado = CASILLERO_DESBLOQUEADO;
@@ -42,6 +43,7 @@ Casillero::~Casillero() {
   }
   delete[] this->casillerosAdyacentes;
 }
+EstadoCasillero Casillero::getEstado() { return estado; };
 
 void Casillero::asignarCasilleroAdyacente(int x, int y, int z,
                                           Casillero *casilleroAdyacente) {
@@ -105,9 +107,8 @@ unsigned int Casillero::getLongitudFichasIguales(unsigned int i, unsigned int j,
 }
 
 Ficha *Casillero::getFicha() {
-  if (!(this->ficha)) {
-    throw("El casillero esta vacio, no se puede obtener una ficha.");
-  }
+
+  std::cout << this->ficha << std::endl;
   return this->ficha;
 }
 
@@ -116,7 +117,7 @@ void Casillero::setFicha(Ficha *nuevaFicha) {
     throw("No se puede poner una ficha en el casillero ocupado o bloqueado");
   }
 
-  this->ficha = new Ficha(nuevaFicha);
+  this->ficha = nuevaFicha;
 }
 
 void Casillero::eliminarFicha() {
@@ -131,7 +132,7 @@ void Casillero::eliminarFicha() {
 bool Casillero::estaBloqueado() {
   return (this->estado == CASILLERO_BLOQUEADO);
 }
-
+bool Casillero::estaEnvenenado() { return estado == CASILLERO_ENVENENADO; }
 void Casillero::bloquear() { this->estado = CASILLERO_BLOQUEADO; }
 
 void Casillero::desbloquear() { this->estado = CASILLERO_DESBLOQUEADO; }
@@ -143,11 +144,18 @@ bool Casillero::tienenMismaFicha(Casillero *casilleroAdyacente) {
   return (this->ficha->esIgual(casilleroAdyacente->getFicha()));
 }
 
+void Casillero::setContadorDeTurnos(int turnos) {
+  this->contadorDeTurno = turnos;
+}
+
 bool Casillero::estaVacio() {
 
-  if (this->ficha) {
-    return false;
+  if (this->ficha == NULL) {
+    return true;
   }
 
-  return true;
+  return false;
 }
+
+void Casillero::bajarTurno() { this->contadorDeTurno--; }
+int Casillero::getContadorDeturnos() { return this->contadorDeTurno; }

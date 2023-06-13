@@ -18,7 +18,7 @@ public:
    */
   Ficha(TipoDeFicha tipoDeFicha, std::string indetificadorDeJugador);
   Ficha(std::string identificadorDeJugador);
-
+  Ficha &operator=(const Ficha &otraFicha);
   /* Pre: la fichaOriginal debe ser valida
    * Post: crea una ficha como copia de la ficha dada, y estado desbloqueado
    * */
