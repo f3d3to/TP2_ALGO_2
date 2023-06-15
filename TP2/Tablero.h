@@ -20,11 +20,13 @@ public:
     Tablero(unsigned int x, unsigned int y, unsigned int z);
 
     /*
+     * pre: ---
      * Post: libera la memoria solicitada para la creacion del tablero
      */
     ~Tablero();
 
     /*
+     * pre: ---
      * Post: devuelve un puntero a las dimensiones del Tablero
      */
     int * getDimensiones();

@@ -53,7 +53,7 @@ int main() {
 
     juego->interfaz->mostrarTableroDeJugadorBitMap(juego->tablero,
                                                    juego->jugadorEnTurno);
-    std::cout << "Seleccione enter para avanzar de turno." << std::endl;
+
     juego->interfaz->limpiarPantalla();
 
     juego->cambiarDeJugadorActual();

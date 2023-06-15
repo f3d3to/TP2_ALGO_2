@@ -462,9 +462,6 @@ void Juego::sacarCartaDeMazo(Jugador *jugador) {
   } catch (...) {
     this->interfaz->mazoSinCartas();
   }
-  // } else {
-  //   this->interfaz->mazoSinCartas();
-  // }
   std::cout << "Ha sacado una carta del mazo." << std::endl;
 }
 void Juego::ataqueQuimico() {
