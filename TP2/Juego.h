@@ -14,7 +14,7 @@
 typedef enum { ENCURSO, FINALIZADO } Estado;
 class Juego {
 
-public:
+private:
   Lista<Jugador *> *jugadores;
   Pila<Carta *> *mazo;
   Jugador *jugadorEnTurno;
@@ -27,6 +27,7 @@ public:
   unsigned int cantidadDeFichas;
   int turno;
 
+public:
   /*
    * pre: ---
    * post: crea una instancia de juego.
@@ -86,13 +87,22 @@ public:
 
   /*
    * pre: exista una instancia de juego, recibe las coordenadas x,y,z y una
-   * Ficha. post: coloca una ficha del tipo mina en las coordenadas x,y,z.
+   * Ficha.
+   * post: coloca una ficha del tipo mina en las coordenadas x,y,z.
    */
   void colocarMina(int x, int y, int z);
 
   /*
+   * pre: exista una instancia de juego, recibe las coordenadas x,y,z.
+   * post: lanza un misil en la posicion x,y,z eliminando si hay soldados o
+   * armamento.
+   */
+  void lanzarMisil(int x, int y, int z);
+
+  /*
    * pre: exista una instancia de juego, recibe las coordenadas x,y,z y una
-   * Ficha. post: coloca una ficha del tipo soldado en las coordenadas x,y,z.
+   * Ficha. post: coloca una ficha del tipo soldado en las coordenadas
+   * x,y,z.
    */
   void colocarSoldado(int x, int y, int z, Ficha *soldado);
 
@@ -101,14 +111,14 @@ public:
    * x1,y1,z1,x2,y2,z2. post: si es una ficha del tipo soldado lo mueve desde la
    * posicion incial x1,y1,z1 a la posicion final x2,y2,z2.
    */
-  void moverSoldado(int x1, int y1, int z1, int x2, int y2, int z2);
+  void moverSoldado();
 
   /*
    * pre: exista una instancia de juego, recibe las coordenadas
    * x1,y1,z1,x2,y2,z2. post: si es una ficha del tipo armamento lo mueve desde
    * la posicion incial x1,y1,z1 a la posicion final x2,y2,z2.
    */
-  void moverArmamento(int x1, int y1, int z1, int x2, int y2, int z2);
+  void moverArmamento();
 
   /*
    * pre: exista una instancia de juego, recibe un jugador.
@@ -185,12 +195,6 @@ public:
   unsigned int soldadosDeJugadorEnTablero(Jugador *jugador);
 
   /*
-   * pre: exista una instancia de juego, recibe el numero de jugador.
-   * post: devuelve el nombre del jugador con respecto a ese numero.
-   */
-  std::string pedirNombr(int jugadorNumero);
-
-  /*
    * pre: exista una instancia de juego
    * post: devuelve la cantidad de jugadores que van a haber en el juego.
    */
@@ -236,6 +240,32 @@ public:
    * de esa carta.
    */
   void ejecutarCarta(unsigned int indice);
+
+  /*
+   * pre: exista una instancia de juego, recibe un jugador.
+   * post: devuelve true o false si encuentra un barco del jugador.
+   */
+  bool hayBarco(Jugador *jugador);
+
+  /*
+   * pre: exista una instancia de juego, recibe un jugador.
+   * post: devuelve true o false si encuentra un avion del jugador.
+   */
+  bool hayAvion(Jugador *jugador);
+
+  /*
+   * pre: exista una instancia de juego.
+   * post: ejecuta el radar del avion.
+   */
+  void ejecutarRadar(Jugador *jugador);
+
+  /*
+   * pre: exista una instancia de juego.
+   * post: desarrolla toda la logica del juego batalla digital.
+   */
+  void jugarBatallaDigital();
 };
+
+
 
 #endif /* JUEGO_H_ */

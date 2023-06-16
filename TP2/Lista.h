@@ -14,58 +14,48 @@ public:
    * Post: constructor de lista vacia
    */
   Lista();
-
   /*
    * Post: copia la lista recibida
    */
   Lista(Lista<T> &otraLista);
-
   /*
    * Post: libera los recursos asociados a la lista
    */
   ~Lista();
-
   /*
    * Post: agrega elemento al final de Lista (posición contarElementos() + 1)
    */
   void altaFinal(T elemento);
-
   /*
    * Pre: posición pertenece al intervalo [1, contarElementos() + 1]
    * Post: agrega el elemento en la posición indicada
    */
   void altaPosicion(T elemento, unsigned int posicion);
-
   /*
    * Post: agrega todos los elementos de otraLista a partir de la posición
    * contarElementos() + 1
    */
   void agregar(Lista<T> &otraLista);
-
   /*
    * Pre: posición pertenece al intervalo [1, contarElementos()]
    * Post: devuelve el elemento en la posición indicada
    */
   T obtener(unsigned int posicion);
-
   /*
    * Pre: posición pertenece al intervalo: [1, contarElementos()]
    * Post: cambia elemento de posición indicada por elemento pasado
    */
   void asignar(T elemento, unsigned int posicion);
-
   /*
    * Pre: posición pertenece al intervalo: [1, contarElementos()]
    * Post: remueve de la Lista el elemento en la posición indicada
    */
   void remover(unsigned int posicion);
-
   /*
    * Post: deja cursor de Lista preparado para hacer nuevo recorrido colocandolo
    * en NULL
    */
   void iniciarCursor();
-
   /*
    * Pre: se ha iniciado un recorrido (invocando el método iniciarCursor())
    * y desde entonces no se han agregado o removido elementos de la Lista.
@@ -76,7 +66,6 @@ public:
    * recorrer.)
    */
   bool avanzarCursor();
-
   /*
    * Pre: el cursor está posicionado sobre un elemento de la Lista
    * (fue invocado el método avanzarCursor() y devolvió true)
@@ -84,7 +73,6 @@ public:
    * Post: devuelve el elemento en la posición del cursor.
    */
   T obtenerCursor();
-
   /*
    * Post: devuelve en booleano si la lista esta vacia o no
    */

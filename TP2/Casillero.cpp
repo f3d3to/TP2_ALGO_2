@@ -107,8 +107,6 @@ unsigned int Casillero::getLongitudFichasIguales(unsigned int i, unsigned int j,
 }
 
 Ficha *Casillero::getFicha() {
-
-  std::cout << this->ficha << std::endl;
   return this->ficha;
 }
 

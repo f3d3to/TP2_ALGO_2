@@ -289,13 +289,28 @@ void Interfaz::mostrarFichaEnCasillero(Casillero *casillero) {
   this->mostrarFicha(casillero->getFicha());
   std::cout << "";
 }
-void Interfaz::pedirCoordenadas(int &x, int &y, int &z) {
+void Interfaz::pedirCoordenadas(int &x, int &y, int &z, Tablero *tablero) {
+
+  bool coordenadasValidas = false;
+
   std::cout << "\nIngrese las coordenas del casillero (ancho, alto, "
                "profundo): "
             << std::endl;
-  std::cin >> x;
-  std::cin >> y;
-  std::cin >> z;
+
+  while (!coordenadasValidas) {
+    int *dimesiones = tablero->getDimensiones();
+    std::cin >> x;
+    std::cin >> y;
+    std::cin >> z;
+
+    if (x < 1 || y < 1 || z < 1 || x > dimesiones[0] || y > dimesiones[1] ||
+        z > dimesiones[2]) {
+      std::cout << "Coordenadas inválidas. Intente nuevamente." << std::endl;
+      coordenadasValidas = false;
+    } else {
+      coordenadasValidas = true;
+    }
+  }
   x--;
   y--;
   z--;
@@ -389,47 +404,40 @@ void asignarColor(TipoTerreno terreno, EstadoCasillero estado, int &red,
 // Función para asignar el color de la ficha
 void asignarColorFicha(Ficha *ficha, int &red, int &green, int &blue) {
   if (ficha == NULL) {
-    red = 0;
-    green = 0;
-    blue = 0; // Gris (por defecto)
-    // std::cout << "NULL" << std::endl;
+    red = 255;
+    green = 255;
+    blue = 255; // Gris (por defecto)
   } else {
     switch (ficha->getTipoDeFicha()) {
     case NO_DEFINIDA:
-      red = 128;
-      green = 128;
-      blue = 128;
-      // std::cout << "NO_DEFINIDA" << std::endl;
+      red = 255;
+      green = 255;
+      blue = 255;
       break;
     case MINA:
       red = 0;
       green = 255;
-      blue = 0; // Verde brillante
-      // std::cout << "MINA" << std::endl;
+      blue = 95; // Verde brillante
       break;
     case SOLDADO:
-      red = 0;
-      green = 0;
-      blue = 255; // Azul brillante
-      // std::cout << "SOLDADO" << std::endl;
-      break;
-    case ARMAMENTO:
       red = 255;
       green = 255;
       blue = 0; // Amarillo brillante
-      // std::cout << "ARMAMENTO" << std::endl;
+      break;
+    case ARMAMENTO:
+      red = 255;
+      green = 0;
+      blue = 255; // Magenta
       break;
     case BARCO:
       red = 255;
       green = 165;
       blue = 0; // Naranja
-      // std::cout << "BARCO" << std::endl;
       break;
     case AVION:
-      red = 255;
-      green = 20;
-      blue = 147; // Rosa
-      // std::cout << "AVION" << std::endl;
+      red = 128;
+      green = 128;
+      blue = 128; // Gris
       break;
     }
   }
@@ -439,75 +447,52 @@ void pintarFondoNegro(BMP &image) {
   // Pintar fondo negro
   for (int x = 0; x < image.TellWidth(); ++x) {
     for (int y = 0; y < image.TellHeight(); ++y) {
-      image(x, y)->Red = 0;
-      image(x, y)->Green = 0;
-      image(x, y)->Blue = 0;
+      image(x, y)->Red = 255;
+      image(x, y)->Green = 255;
+      image(x, y)->Blue = 255;
     }
   }
 }
-
-void Interfaz::mostrarTableroDeJugadorBitMap(Tablero *tablero,
-                                             Jugador *jugador) {
+void Interfaz::mostrarTableroDeJugadorBitMap(Tablero* tablero, Jugador* jugador) {
   int dim[3];
   dim[0] = tablero->getDimensiones()[0];
   dim[1] = tablero->getDimensiones()[1];
   dim[2] = tablero->getDimensiones()[2];
 
-  int nivelesPorFila = 3; // Cantidad de capas por cada fila de niveles
-  int pixelSize = 60;     // Tamaño de píxel para cada casillero (aumentado)
-  int layerGap = 20;      // Espacio entre capas (aumentado)
-
+  int nivelesPorFila = 3;  // Cantidad de capas por cada fila de niveles
+  int pixelSize = 60;      // Tamaño de píxel para cada casillero (aumentado)
+  int layerGap = 20;       // Espacio entre capas (aumentado)
   BMP image;
-  image.SetSize(
-      dim[0] * pixelSize * nivelesPorFila + (nivelesPorFila - 1) * layerGap +
-          50,
-      dim[1] * pixelSize * ((dim[2] + nivelesPorFila - 1) / nivelesPorFila) +
-          ((dim[2] + nivelesPorFila - 1) / nivelesPorFila - 1) * layerGap + 50);
+  image.SetSize(dim[0] * pixelSize * nivelesPorFila + (nivelesPorFila - 1) * layerGap + 50,
+                dim[1] * pixelSize * ((dim[2] + nivelesPorFila - 1) / nivelesPorFila) +
+                    ((dim[2] + nivelesPorFila - 1) / nivelesPorFila - 1) * layerGap + 50);
   image.SetBitDepth(24);
   pintarFondoNegro(image);
 
   for (int k = 0; k < dim[2]; ++k) {
-    // Pintar el número de capa
-    int capaNumXStart = 5; // Posición X para el número de capa
-    int capaNumYStart = k * dim[1] * pixelSize + k * layerGap +
-                        20; // Posición Y para el número de capa
+    int nivelActual = k / nivelesPorFila;     // Nivel actual en la fila de niveles
+    int nivelOffset = k % nivelesPorFila;     // Desplazamiento en la fila de niveles
 
     for (int j = 0; j < dim[1]; ++j) {
       for (int i = 0; i < dim[0]; ++i) {
-        Casillero *casillero = tablero->getCasillero(i, j, k);
-        Ficha *ficha = casillero->getFicha();
+        Casillero* casillero = tablero->getCasillero(i, j, k);
+        Ficha* ficha = casillero->getFicha();
 
-        int nivelActual =
-            k / nivelesPorFila; // Nivel actual en la fila de niveles
-        int nivelOffset =
-            k % nivelesPorFila; // Desplazamiento en la fila de niveles
+        int xStart = (nivelActual * dim[0] + i) * pixelSize + nivelActual * layerGap + 25;
+        int yStart = (j + nivelOffset * dim[1]) * pixelSize + nivelOffset * layerGap + 25;
+        int xEnd = (nivelActual * dim[0] + i + 1) * pixelSize + nivelActual * layerGap + 25;
+        int yEnd = (j + 1 + nivelOffset * dim[1]) * pixelSize + nivelOffset * layerGap + 25;
 
-        int xStart = (nivelActual * dim[0] + i) * pixelSize +
-                     nivelActual * layerGap + 25;
-        int yStart = (j + nivelOffset * dim[1]) * pixelSize +
-                     nivelOffset * layerGap + 25;
-        int xEnd = (nivelActual * dim[0] + i + 1) * pixelSize +
-                   nivelActual * layerGap + 25;
-        int yEnd = (j + 1 + nivelOffset * dim[1]) * pixelSize +
-                   nivelOffset * layerGap + 25;
-
-        // Obtener estado del casillero
         EstadoCasillero estadoCasillero = casillero->getEstado();
-
-        // Asignar color según el estado y terreno del casillero
-        int red, green, blue;
         TipoTerreno terreno = casillero->obtenerTerreno();
+        int red, green, blue;
         asignarColor(terreno, estadoCasillero, red, green, blue);
-
-        // Pintar el casillero con el color correspondiente
         pintarCasillero(image, xStart, yStart, xEnd, yEnd, red, green, blue);
-
-        int fichaRed, fichaGreen, fichaBlue;
-        asignarColorFicha(ficha, fichaRed, fichaGreen, fichaBlue);
-
-        // Pintar contorno de ficha con el color correspondiente
-        pintarFicha(image, xStart, yStart, xEnd, yEnd, fichaRed, fichaGreen,
-                    fichaBlue);
+        if (ficha != NULL && ficha->getIdentificadorDeJugador() == jugador->getNombre()) {
+          int fichaRed, fichaGreen, fichaBlue;
+          asignarColorFicha(ficha, fichaRed, fichaGreen, fichaBlue);
+          pintarFicha(image, xStart, yStart, xEnd, yEnd, fichaRed, fichaGreen, fichaBlue);
+        }
       }
     }
   }

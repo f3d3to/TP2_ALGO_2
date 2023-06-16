@@ -103,7 +103,6 @@ public:
    * Post: imprime un mensaje para ver si usa o no carta en el turno.
    */
   void pedirUsarCarta();
-  
 
   /*
    * Pre: ---
@@ -123,18 +122,16 @@ public:
    */
   void indicarMoverArmamento();
 
-
   /*
    * Pre: ---
    * Post: imprimer un mensaje que indica en fin del juego.
    */
   void mostrarFinDelJuego();
 
-
   /*
    * Pre: Recibe un tablero y un jugador
-   * Post: imprime el tablero mediante bitmap, monstrando solo las fichas del jugador
-   * ingresado.
+   * Post: imprime el tablero mediante bitmap, monstrando solo las fichas del
+   * jugador ingresado.
    */
   void mostrarTableroDeJugadorBitMap(Tablero *tablero, Jugador *jugador);
 
@@ -243,7 +240,7 @@ public:
 
   /*
    * Pre: ---
-   * Post: Limpia la interfaz de juego 
+   * Post: Limpia la interfaz de juego
    */
   void limpiarPantalla();
 
@@ -281,11 +278,11 @@ public:
    * Pre: recibe las coordenadas x,y,z.
    * Post: imprime un mensaje pidiendo una posicion y las almacena en x,y,z.
    */
-  void pedirCoordenadas(int &x, int &y, int &z);
+  void pedirCoordenadas(int &x, int &y, int &z, Tablero *tablero);
 
   /*
    * Pre: Recibe un jugador.
-   * Post:imprime un mensaje pidiendo la carta a usar del jugador y 
+   * Post:imprime un mensaje pidiendo la carta a usar del jugador y
    * devuelve el numero de la carta a usar.
    */
   unsigned int pedirNroCarta(Jugador *jugador);
