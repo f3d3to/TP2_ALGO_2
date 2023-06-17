@@ -106,12 +106,10 @@ unsigned int Casillero::getLongitudFichasIguales(unsigned int i, unsigned int j,
   return 0;
 }
 
-Ficha *Casillero::getFicha() {
-  return this->ficha;
-}
+Ficha *Casillero::getFicha() { return this->ficha; }
 
 void Casillero::setFicha(Ficha *nuevaFicha) {
-  if (this->ficha || this->estaBloqueado()) {
+  if (this->estaBloqueado()) {
     throw("No se puede poner una ficha en el casillero ocupado o bloqueado");
   }
 

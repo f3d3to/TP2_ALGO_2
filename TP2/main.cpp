@@ -10,12 +10,12 @@
 #include <string>
 
 int main() {
-  try{
-    Juego *juego = new Juego();
-    juego->jugarBatallaDigital();
-    delete juego;
-  }
-  catch(...){
-    throw "Hay un error en el inicio del juego.";
-  }
+  // try{
+  Juego *juego = new Juego();
+  juego->jugarBatallaDigital();
+  delete juego;
+  // }
+  // catch(...){
+  //   throw "Hay un error en el inicio del juego.";
+  // }
 }

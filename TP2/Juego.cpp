@@ -5,6 +5,7 @@
 #include "Jugador.h"
 #include "Pila.h"
 #include "Tablero.h"
+#include <string>
 
 Juego::Juego() {
   this->interfaz->mostrarPantallaInicial();
@@ -16,13 +17,13 @@ Juego::Juego() {
   unsigned int cantidadJugadores = pedirCantidadJugadores();
   unsigned int cantidadFichas = pedirCantidadFichas();
   unsigned int cantidadCartas = pedirCantidadCartas();
+
   this->cantidadDeFichas = cantidadFichas;
 
   this->jugadores = new Lista<Jugador *>;
   // mostrar Siguiente jugador
   for (unsigned int i = 0; i < cantidadJugadores; i++) {
     std::string nombre = pedirNombre(i + 1);
-
     Pila<Ficha *> *fichas = new Pila<Ficha *>;
     for (unsigned int j = 0; j < cantidadFichas; j++) {
       Ficha *ficha = new Ficha(nombre);
@@ -418,7 +419,7 @@ void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
     } else {
       soldado->setTipoDeFicha(SOLDADO);
       casillero->setFicha(soldado);
-      std::cout << "Soldado colocado." << std::endl;
+      std::cout << "\033[32mSoldado colocado.\033[0m" << std::endl;
     }
   }
 
@@ -432,121 +433,98 @@ void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
  */
 void Juego::moverSoldado() {
   int x1, y1, z1, x2, y2, z2;
-  bool movimientoValido = false;
+  int *dim = this->tablero->getDimensiones();
+  bool seleccionOrigen = false;
+  bool seleccionDestino = false;
+  Casillero *casilleroOrigen = NULL;
 
-  while (!movimientoValido) {
-    std::cout << "Ingrese las coordenadas donde se \033[32mencuentre el soldado\033[0m." << std::endl;
+  while (!seleccionOrigen) {
+    std::cout << "Ingrese las coordenadas donde se \033[32mencuentre el "
+                 "soldado\033[0m."
+              << std::endl;
     this->interfaz->pedirCoordenadas(x1, y1, z1, this->tablero);
-    Jugador* jugador = this->jugadorEnTurno;
-    Casillero* casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
-    int *dim = this->tablero->getDimensiones();
+    Jugador *jugador = this->jugadorEnTurno;
+    casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
 
-    if (casilleroOrigen->getFicha() != NULL && casilleroOrigen->getFicha()->getTipoDeFicha() == SOLDADO &&
-        casilleroOrigen->getFicha()->getIdentificadorDeJugador() == jugador->getNombre()) {
-
-      std::cout << "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m del soldado." << std::endl;
-      this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
-
-      Casillero* casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
-      if (casilleroDestino->esAdyacenteLineal(casilleroOrigen)) {
-        this->colocarSoldado(x2, y2, z2, casilleroOrigen->getFicha());
-        casilleroOrigen->setFicha(NULL);
-        std::cout << "\033[32mSoldado movido.\033[0m" << std::endl;
-        movimientoValido = true;
-      } else {
-        std::cout << "\033[31mLa coordenada de destino seleccionada no es adyacente al soldado.\033[0m" << std::endl;
-
-        // Mostrar coordenadas adyacentes válidas
-        std::cout << "Coordenadas adyacentes válidas como ejemplo:";
-        if (x1 > 0) {
-          std::cout << " (" << x1 - 1 << ", " << y1 << ", " << z1 << ")";
-        }
-        if (x1 < dim[0] - 1) {
-          std::cout << " (" << x1 + 1 << ", " << y1 << ", " << z1 << ")";
-        }
-        if (y1 > 0) {
-          std::cout << " (" << x1 << ", " << y1 - 1 << ", " << z1 << ")";
-        }
-        if (y1 < dim[1] - 1) {
-          std::cout << " (" << x1 << ", " << y1 + 1 << ", " << z1 << ")";
-        }
-        if (z1 > 0) {
-          std::cout << " (" << x1 << ", " << y1 << ", " << z1 - 1 << ")";
-        }
-        if (z1 < dim[2] - 1) {
-          std::cout << " (" << x1 << ", " << y1 << ", " << z1 + 1 << ")";
-        }
-        std::cout << std::endl;
-      }
-
+    if (casilleroOrigen->getFicha() != NULL &&
+        casilleroOrigen->getFicha()->getTipoDeFicha() == SOLDADO &&
+        casilleroOrigen->getFicha()->getIdentificadorDeJugador() ==
+            jugador->getNombre()) {
+      seleccionOrigen = true;
     } else {
-      std::cout << "\033[31mNo hay un soldado del jugador actual en la casilla de origen seleccionada.\033[0m" << std::endl;
+      std::cout << "\033[31mNo hay un soldado del jugador actual en la casilla "
+                   "de origen seleccionada.\033[0m"
+                << std::endl;
     }
+  }
 
+  while (!seleccionDestino) {
+    std::cout << "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m "
+                 "del soldado."
+              << std::endl;
+    this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
+
+    Casillero *casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
+    if (casilleroDestino->esAdyacenteLineal(casilleroOrigen)) {
+      this->colocarSoldado(x2, y2, z2, casilleroOrigen->getFicha());
+      casilleroOrigen->setFicha(NULL);
+      std::cout << "\033[32mSoldado movido.\033[0m" << std::endl;
+      seleccionDestino = true;
+    } else {
+      std::cout << "\033[31mLa coordenada de destino seleccionada no es "
+                   "adyacente al soldado.\033[0m"
+                << std::endl;
+    }
   }
 }
-
-
 
 void Juego::moverArmamento() {
   int x1, y1, z1, x2, y2, z2;
-  bool movimientoValido = false;
+  int *dim = this->tablero->getDimensiones();
+  bool seleccionOrigen = false;
+  bool seleccionDestino = false;
+  Casillero *casilleroOrigen = NULL;
 
-  while (!movimientoValido) {
-    std::cout << "Ingrese las coordenadas donde se \033[32mencuentre el armamento\033[0m." << std::endl;
+  while (!seleccionOrigen) {
+    std::cout << "Ingrese las coordenadas donde se \033[32mencuentre el "
+                 "armamento\033[0m."
+              << std::endl;
     this->interfaz->pedirCoordenadas(x1, y1, z1, this->tablero);
-    Jugador* jugador = this->jugadorEnTurno;
-    Casillero* casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
-    int *dim = this->tablero->getDimensiones();
+    Jugador *jugador = this->jugadorEnTurno;
+    casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
 
-    if (casilleroOrigen->getFicha() != NULL && casilleroOrigen->getFicha()->getTipoDeFicha() == ARMAMENTO &&
-        casilleroOrigen->getFicha()->getIdentificadorDeJugador() == jugador->getNombre()) {
-
-      std::cout << "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m del armamento." << std::endl;
-      this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
-
-      Casillero* casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
-      if (casilleroDestino->esAdyacenteLineal(casilleroOrigen)) {
-        this->colocarArmamento(x2, y2, z2, casilleroOrigen->getFicha());
-        casilleroOrigen->setFicha(NULL);
-        std::cout << "\033[32mArmamento movido.\033[0m" << std::endl;
-        movimientoValido = true;
-      } else {
-        std::cout << "\033[31mLa coordenada de destino seleccionada no es adyacente al armamento.\033[0m" << std::endl;
-
-        // Mostrar coordenadas adyacentes válidas
-        std::cout << "Coordenadas adyacentes válidas como ejemplo:";
-        if (x1 > 0) {
-          std::cout << " (" << x1 - 1 << ", " << y1 << ", " << z1 << ")";
-        }
-        if (x1 < dim[0] - 1) {
-          std::cout << " (" << x1 + 1 << ", " << y1 << ", " << z1 << ")";
-        }
-        if (y1 > 0) {
-          std::cout << " (" << x1 << ", " << y1 - 1 << ", " << z1 << ")";
-        }
-        if (y1 < dim[1] - 1) {
-          std::cout << " (" << x1 << ", " << y1 + 1 << ", " << z1 << ")";
-        }
-        if (z1 > 0) {
-          std::cout << " (" << x1 << ", " << y1 << ", " << z1 - 1 << ")";
-        }
-        if (z1 < dim[2] - 1) {
-          std::cout << " (" << x1 << ", " << y1 << ", " << z1 + 1 << ")";
-        }
-        std::cout << std::endl;
-      }
-
+    if (casilleroOrigen->getFicha() != NULL &&
+        casilleroOrigen->getFicha()->getTipoDeFicha() == ARMAMENTO &&
+        casilleroOrigen->getFicha()->getIdentificadorDeJugador() ==
+            jugador->getNombre()) {
+      seleccionOrigen = true;
     } else {
-      std::cout << "\033[31mNo hay un armamento del jugador actual en la casilla de origen seleccionada.\033[0m" << std::endl;
+      std::cout
+          << "\033[31mNo hay un armamento del jugador actual en la casilla "
+             "de origen seleccionada.\033[0m"
+          << std::endl;
     }
+  }
 
+  while (!seleccionDestino) {
+    std::cout << "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m "
+                 "del armamento."
+              << std::endl;
+    this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
+
+    Casillero *casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
+    if (casilleroDestino->esAdyacenteLineal(casilleroOrigen)) {
+      this->colocarArmamento(x2, y2, z2, casilleroOrigen->getFicha());
+      casilleroOrigen->setFicha(NULL);
+      std::cout << "\033[32mArmamento movido.\033[0m" << std::endl;
+      seleccionDestino = true;
+    } else {
+      std::cout << "\033[31mLa coordenada de destino seleccionada no es "
+                   "adyacente al armamento.\033[0m"
+                << std::endl;
+    }
   }
 }
-
-
-
-
 
 /* Pre:
   Post: Agrega una carta al mazo del jugador (lista)
@@ -574,7 +552,8 @@ void Juego::ataqueQuimico() {
       for (int j = 0; j < 5; j++) {
         for (int k = 0; k < 5; k++) {
           // Envenana los adyacentes
-          Casillero *casilleroAux = this->tablero->getCasillero(x - i, y - j, z - k);
+          Casillero *casilleroAux =
+              this->tablero->getCasillero(x - i, y - j, z - k);
           casilleroAux->envenenar();
           // El origen de coordenadas
 
@@ -615,13 +594,14 @@ void Juego::colocarAvion() {
         std::cout << "Avion colocado." << std::endl;
         coordenadaValida = true;
       } else {
-        std::cout << "Coordenada inválida. El casillero no está en el aire o ya está ocupado." << std::endl;
+        std::cout << "Coordenada inválida. El casillero no está en el aire o "
+                     "ya está ocupado."
+                  << std::endl;
       }
     }
   } catch (...) {
     std::cout << "El avión no pudo ser colocado." << std::endl;
   }
-
 }
 
 void Juego::colocarBarco() {
@@ -641,14 +621,15 @@ void Juego::colocarBarco() {
         std::cout << "Barco colocado." << std::endl;
         coordenadaValida = true;
       } else {
-        std::cout << "Coordenada inválida. El casillero no es de agua o ya está ocupado." << std::endl;
+        std::cout << "Coordenada inválida. El casillero no es de agua o ya "
+                     "está ocupado."
+                  << std::endl;
       }
     }
   } catch (...) {
     std::cout << "El barco no pudo ser colocado." << std::endl;
   }
 }
-
 
 void Juego::agregarTresMinas() {
   std::cout << "Coloque un \033[1;32tres minas\033[0m" << std::endl;
@@ -813,7 +794,8 @@ void Juego::ejecutarRadar(Jugador *jugador) {
           for (int z = k - 3; z < dim[2] - k; z++) {
             for (int y = 0; y < 3; y++) {
               for (int x = 0; x < 3; x++) {
-                Casillero *casillero = this->tablero->getCasillero(i -x,j- y,z);
+                Casillero *casillero =
+                    this->tablero->getCasillero(i - x, j - y, z);
                 if (casillero->getFicha() != NULL &&
                     casillero->getFicha()->getIdentificadorDeJugador() ==
                         jugador->getNombre()) {
@@ -873,7 +855,7 @@ void Juego::jugarBatallaDigital() {
     this->ejecutarRadar(this->jugadorEnTurno);
 
     this->interfaz->mostrarTableroDeJugadorBitMap(this->tablero,
-                                                   this->jugadorEnTurno);
+                                                  this->jugadorEnTurno);
 
     this->interfaz->limpiarPantalla();
 
@@ -885,5 +867,4 @@ void Juego::jugarBatallaDigital() {
   }
   this->interfaz->mostrarGanador(this->hayGanador->getNombre());
   this->interfaz->mostrarFinDelJuego();
-
 }

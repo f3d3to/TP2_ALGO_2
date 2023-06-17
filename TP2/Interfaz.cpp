@@ -285,9 +285,9 @@ void Interfaz::limpiarPantalla() {
 
 void Interfaz::mostrarFichaEnCasillero(Casillero *casillero) {
 
-  std::cout << " ";
+  std::cout << "\n";
   this->mostrarFicha(casillero->getFicha());
-  std::cout << "";
+  std::cout << "\n";
 }
 void Interfaz::pedirCoordenadas(int &x, int &y, int &z, Tablero *tablero) {
 
@@ -453,45 +453,55 @@ void pintarFondoNegro(BMP &image) {
     }
   }
 }
-void Interfaz::mostrarTableroDeJugadorBitMap(Tablero* tablero, Jugador* jugador) {
+void Interfaz::mostrarTableroDeJugadorBitMap(Tablero *tablero,
+                                             Jugador *jugador) {
   int dim[3];
   dim[0] = tablero->getDimensiones()[0];
   dim[1] = tablero->getDimensiones()[1];
   dim[2] = tablero->getDimensiones()[2];
 
-  int nivelesPorFila = 3;  // Cantidad de capas por cada fila de niveles
-  int pixelSize = 60;      // Tamaño de píxel para cada casillero (aumentado)
-  int layerGap = 20;       // Espacio entre capas (aumentado)
+  int nivelesPorFila = 3; // Cantidad de capas por cada fila de niveles
+  int pixelSize = 60;     // Tamaño de píxel para cada casillero (aumentado)
+  int layerGap = 20;      // Espacio entre capas (aumentado)
   BMP image;
-  image.SetSize(dim[0] * pixelSize * nivelesPorFila + (nivelesPorFila - 1) * layerGap + 50,
-                dim[1] * pixelSize * ((dim[2] + nivelesPorFila - 1) / nivelesPorFila) +
-                    ((dim[2] + nivelesPorFila - 1) / nivelesPorFila - 1) * layerGap + 50);
+  image.SetSize(
+      dim[0] * pixelSize * nivelesPorFila + (nivelesPorFila - 1) * layerGap +
+          50,
+      dim[1] * pixelSize * ((dim[2] + nivelesPorFila - 1) / nivelesPorFila) +
+          ((dim[2] + nivelesPorFila - 1) / nivelesPorFila - 1) * layerGap + 50);
   image.SetBitDepth(24);
   pintarFondoNegro(image);
 
   for (int k = 0; k < dim[2]; ++k) {
-    int nivelActual = k / nivelesPorFila;     // Nivel actual en la fila de niveles
-    int nivelOffset = k % nivelesPorFila;     // Desplazamiento en la fila de niveles
+    int nivelActual = k / nivelesPorFila; // Nivel actual en la fila de niveles
+    int nivelOffset =
+        k % nivelesPorFila; // Desplazamiento en la fila de niveles
 
     for (int j = 0; j < dim[1]; ++j) {
       for (int i = 0; i < dim[0]; ++i) {
-        Casillero* casillero = tablero->getCasillero(i, j, k);
-        Ficha* ficha = casillero->getFicha();
+        Casillero *casillero = tablero->getCasillero(i, j, k);
+        Ficha *ficha = casillero->getFicha();
 
-        int xStart = (nivelActual * dim[0] + i) * pixelSize + nivelActual * layerGap + 25;
-        int yStart = (j + nivelOffset * dim[1]) * pixelSize + nivelOffset * layerGap + 25;
-        int xEnd = (nivelActual * dim[0] + i + 1) * pixelSize + nivelActual * layerGap + 25;
-        int yEnd = (j + 1 + nivelOffset * dim[1]) * pixelSize + nivelOffset * layerGap + 25;
+        int xStart = (nivelActual * dim[0] + i) * pixelSize +
+                     nivelActual * layerGap + 25;
+        int yStart = (j + nivelOffset * dim[1]) * pixelSize +
+                     nivelOffset * layerGap + 25;
+        int xEnd = (nivelActual * dim[0] + i + 1) * pixelSize +
+                   nivelActual * layerGap + 25;
+        int yEnd = (j + 1 + nivelOffset * dim[1]) * pixelSize +
+                   nivelOffset * layerGap + 25;
 
         EstadoCasillero estadoCasillero = casillero->getEstado();
         TipoTerreno terreno = casillero->obtenerTerreno();
         int red, green, blue;
         asignarColor(terreno, estadoCasillero, red, green, blue);
         pintarCasillero(image, xStart, yStart, xEnd, yEnd, red, green, blue);
-        if (ficha != NULL && ficha->getIdentificadorDeJugador() == jugador->getNombre()) {
+        if (ficha != NULL &&
+            ficha->getIdentificadorDeJugador() == jugador->getNombre()) {
           int fichaRed, fichaGreen, fichaBlue;
           asignarColorFicha(ficha, fichaRed, fichaGreen, fichaBlue);
-          pintarFicha(image, xStart, yStart, xEnd, yEnd, fichaRed, fichaGreen, fichaBlue);
+          pintarFicha(image, xStart, yStart, xEnd, yEnd, fichaRed, fichaGreen,
+                      fichaBlue);
         }
       }
     }
