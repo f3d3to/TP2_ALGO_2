@@ -80,18 +80,59 @@ void Interfaz::mostrarControles(Tablero *t) {
   std::cout << "\n#COORDENADAS\n";
   std::cout
       << "\nLas coordenadas que ingrese deben estar entre los rangos:  \n";
-  std::cout << "\n\t Ancho:\t\t1 - " << dim[0];
-  std::cout << "\n\t Alto:\t\t1 - " << dim[1];
-  std::cout << "\n\t Profundo:\t1 - " << dim[2];
+  std::cout << "\n\t\033[1;35mAncho:\033[0m\t\t1 - " << dim[0];
+  std::cout << "\n\t\033[1;35mAlto:\033[0m\t\t1 - " << dim[1];
+  std::cout << "\n\t\033[1;35mProfundo:\033[0m\t1 - " << dim[2];
 
   cout << "\n\n································································"
           "·";
   cout << "······························\n\n";
 }
 void Interfaz::mostrarBatallaIniciada() {
-  std::cout
-      << "\033[1;36m\033[4mBatalla iniciada, el juego ha comenzado!\033[0m\n"
-      << std::endl;
+  std::cout << "\033[1m\033[30;48;2;114;192;225mBatalla iniciada, el juego "
+               "ha comenzado!\033[0m\n"
+            << std::endl;
+}
+void Interfaz::mostrarColoresFichas() {
+  std::cout << "Colores de Terreno:" << std::endl;
+
+  // Agua
+  std::cout << "\033[48;2;0;100;235m Agua \033[0m" << std::endl;
+
+  // Tierra
+  std::cout << "\033[48;2;102;51;0m Tierra \033[0m" << std::endl;
+
+  // Aire
+  std::cout << "\033[48;2;0;191;255m Aire \033[0m" << std::endl;
+
+  std::cout << std::endl;
+
+  std::cout << "Colores de Fichas:" << std::endl;
+
+  // Mina
+  std::cout << "\033[48;2;0;255;95m Mina \033[0m" << std::endl;
+
+  // Soldado
+  std::cout << "\033[48;2;255;255;0m Soldado \033[0m" << std::endl;
+
+  // Armamento
+  std::cout << "\033[48;2;255;0;255m Armamento \033[0m" << std::endl;
+
+  // Barco
+  std::cout << "\033[48;2;255;165;0m Barco \033[0m" << std::endl;
+
+  // Avion
+  std::cout << "\033[48;2;128;128;128m Avion \033[0m" << std::endl;
+
+  std::cout << std::endl;
+
+  std::cout << "Colores de Casilleros:" << std::endl;
+
+  // Casillero envenenado
+  std::cout << "\033[48;2;85;0;0m Casillero Envenenado \033[0m" << std::endl;
+
+  // Casillero bloqueado
+  std::cout << "\033[48;2;128;0;0m Casillero Bloqueado \033[0m" << std::endl;
 }
 
 void Interfaz::mostrarFicha(Ficha *ficha) {
@@ -114,54 +155,86 @@ void Interfaz::mostrarFicha(Ficha *ficha) {
     cout << 'A';
   }
 }
+
+void Interfaz::mostrarFichaEliminada(TipoDeFicha tipo) {
+  switch (tipo) {
+  case SOLDADO:
+    cout << "\033[1;31m\033[4mSoldado matado\033[0m" << endl;
+    break;
+  case ARMAMENTO:
+    cout << "\033[1;31m\033[4mArmamento alcanzado, se ha eliminado\033[0m"
+         << endl;
+    break;
+  case AVION:
+    cout << "\033[1;31m\033[4mAvión alcanzado\033[0m" << endl;
+    break;
+  case BARCO:
+    cout << "\033[1;31m\033[4mBarco hundido\033[0m" << endl;
+    break;
+  default:
+    cout << "Ficha desconocida" << endl;
+  }
+}
+
 void Interfaz::mostrarFinDelJuego() {
   std::cout << "\033[1;31m\033[4mFin del juego, gracias por jugar!\033[0m\n"
             << std::endl;
 }
 
-void Interfaz::mostrarGanador(std::string nombreGanador) {
-  cout << "\n\n================================================================"
-          "=";
-  cout << "==============================\n\n";
-  std::cout << "\n\tEl ganador del juego es: \n\n\t\t" << nombreGanador
+void Interfaz::mostrarEmpate() {
+  cout << "\n\n\033[1;36m======================================================"
+          "=========="
+          "=\033[0m";
+  cout << "\033[1;36m==============================\033[0m\n\n";
+  std::cout << "\n\t\033[1;36mHa terminado en empate!\033[0m\n\n\t\t"
             << std::endl;
-  cout << "\n\n================================================================"
-          "=";
-  cout << "==============================\n\n";
+  cout << "\n\n\033[1;36m======================================================"
+          "=========="
+          "=\033[0m";
+  cout << "\033[1;36m==============================\033[0m\n\n";
+}
+
+void Interfaz::mostrarGanador(std::string nombreGanador) {
+  cout << "\n\n\033[42m\033[1;37m";
+  cout << "\n\tEl ganador es el jugador '" << nombreGanador << "'" << endl;
+  cout << "\n\t\t¡¡FELICIDADES!!\n";
+  cout << "\033[0m\n\n";
 }
 
 void Interfaz::pedirNombre(int jugadorNumero) {
-  std::cout << "\nJugador " << jugadorNumero
-            << " - Ingrese su nombre (max 10 caracteres): ";
+  std::cout
+      << "\n\033[1mJugador " << jugadorNumero
+      << "\033[0m - Ingrese su nombre (\033[1;35mmax 10 caracteres\033[0m): ";
 }
 
 void Interfaz::pedirCantidadJugadores() {
   std::cout << "\nIngrese la cantidad de jugadores con la que desea "
-               "jugar (2 o "
-               "mas): ";
+               "jugar (\033[1;35m2 o más\033[0m): ";
 }
 
 void Interfaz::pedirCantidadFichas() {
-  std::cout << "\nIngrese la cantidad de fichas que tendra cada "
-               "jugador (4 o mas): ";
+  std::cout << "\nIngrese la cantidad de fichas que tendrá cada "
+               "jugador (\033[1;35m4 o más\033[0m): ";
 }
 
 void Interfaz::pedirDimensiones() {
-  std::cout << "\nIngrese las dimensiones del tablero (ancho, alto, "
-               "profundo): "
+  std::cout << "\nIngrese las dimensiones del tablero (\033[1;35mancho, alto, "
+               "profundo\033[0m): "
             << std::endl;
 }
 
 void Interfaz::tableroChico() {
-  std::cout << "\nEl tablero debe ser mas grande." << std::endl;
+  std::cout << "\n\033[1;35mEl tablero debe ser más grande.\033[0m"
+            << std::endl;
 }
 
 void Interfaz::pedirCantidadCartas() {
-  std::cout << "\nIngrese la cantidad maxima de cartas que podra tener en la "
-               "mano cada jugador al mismo tiempo (minimo 6): ";
+  std::cout
+      << "\nIngrese la cantidad máxima de cartas que podrá tener en la "
+         "mano cada jugador al mismo tiempo (\033[1;35mmínimo 6\033[0m): ";
 }
 void Interfaz::pedirUsarCarta() {
-  std::cout << "Desea usar una carta? S/N" << std::endl;
+  std::cout << "\033[1mDesea usar una carta? S/N\033[0m" << std::endl;
 }
 
 void Interfaz::pedirPosicionFichaABloquear() {
@@ -184,11 +257,11 @@ void Interfaz::indicarColocarMina() {
 }
 
 void Interfaz::indicarMoverSolado() {
-  std::cout << "Desea mover un soldado? S/N" << std::endl;
+  std::cout << "\033[1mDesea mover un soldado? S/N\033[0m" << std::endl;
 }
 
 void Interfaz::indicarMoverArmamento() {
-  std::cout << "Desea mover un armamento? S/N" << std::endl;
+  std::cout << "\033[1mDesea mover un armamento? S/N\033[0m" << std::endl;
 }
 
 void Interfaz::pedirCoordPonerFicha() {
@@ -248,8 +321,8 @@ void Interfaz::mostrarCartasJugador(Jugador *jugador) {
   while (cartas->avanzarCursor()) {
     contador++;
     Carta *carta = cartas->obtenerCursor();
-    std::cout << "\n\t * " << contador << " : " << carta->getDescripcion()
-              << "\n";
+    std::cout << "\n\t * " << contador << " : \033[37m"
+              << carta->getDescripcion() << "\033[0m\n";
   }
 }
 
@@ -271,7 +344,8 @@ void Interfaz::ingresoInvalido() {
 }
 
 void Interfaz::mostrarJugadorEnTurno(std::string nombreDeJugador) {
-  std::cout << "\nEs el turno del jugador: " << nombreDeJugador << "."
+  std::cout << "\n\033[1m\033[30;48;2;114;192;225m--- Turno del jugador: "
+            << nombreDeJugador << " ---\033[0m\n"
             << std::endl;
 }
 
@@ -289,18 +363,233 @@ void Interfaz::mostrarFichaEnCasillero(Casillero *casillero) {
   this->mostrarFicha(casillero->getFicha());
   std::cout << "\n";
 }
-void Interfaz::pedirCoordenadas(int &x, int &y, int &z, Tablero *tablero) {
 
+void Interfaz::mostrarFichaColocada(const std::string &ficha) {
+  std::string mensaje;
+
+  switch (ficha[0]) {
+  case 'M':
+    mensaje = "Ha colocado una mina.";
+    break;
+  case 'S':
+    mensaje = "Ha colocado un soldado.";
+    break;
+  case 'A':
+    mensaje = "Ha colocado un avión.";
+    break;
+  case 'B':
+    mensaje = "Ha colocado un barco.";
+    break;
+  case 'R':
+    mensaje = "Ha colocado un armamento.";
+    break;
+  case 'T':
+    mensaje = "Ha colocado las tres minas.";
+    break;
+  case 'L':
+    mensaje = "Ha llamado un refuerzo.";
+    break;
+  case 'C':
+    mensaje = "Se ha disparo un misil.";
+    break;
+  default:
+    mensaje = "Ficha no reconocida.";
+    break;
+  }
+
+  std::cout << "\033[32m" << mensaje << "\033[0m\n" << std::endl;
+}
+
+void Interfaz::mostrarInstruccion(const std::string &instruccion) {
+  std::string mensaje;
+
+  switch (instruccion[0]) {
+  case 'S':
+    mensaje = "Coloque un \033[1;33msoldado\033[0m.";
+    break;
+  case 'R':
+    mensaje = "Coloque un \033[1;32marmamento\033[0m";
+    break;
+  case 'A':
+    mensaje = "Coloque un \033[1;32avión\033[0m";
+    break;
+  case 'X':
+    mensaje = "Coloque una \033[1;31mmina\033[0m";
+    break;
+  case 'B':
+    mensaje = "Coloque un \033[1;32barco\033[0m";
+    break;
+  case 'T':
+    mensaje = "Coloque tres minas\033[0m";
+    break;
+  case 'L':
+    mensaje = "Llame un \033[1;32mrefuerzo\033[0m.\n";
+    break;
+  case 'W':
+    mensaje = "Seleccione un casillero.";
+    break;
+  case 'M':
+    mensaje = "Tiene un barco, debe colocar un misil.";
+    break;
+  case 'I':
+    mensaje =
+        "\n\033[1m\033[4mBienvenidos a la configuración del juego.\033[0m\n";
+    break;
+  case 'J':
+    mensaje = "\n\033[1m\033[4mJuego configurado.\033[0m\n";
+    break;
+
+  default:
+    mensaje = "Instrucción no reconocida.";
+    break;
+  }
+
+  std::cout << mensaje;
+}
+
+void Interfaz::mostrarAccionesRealizadas(const std::string &accion) {
+  std::string mensaje;
+
+  switch (accion[0]) {
+  case 'A':
+    mensaje = "Armamento movido.";
+    break;
+  case 'S':
+    mensaje = "Soldado movido.";
+    break;
+  case 'Q':
+    mensaje = "Ha realizado un ataque químico.";
+    break;
+  case 'M':
+    mensaje = "El casillero se ha mostrado.";
+    break;
+  case 'C':
+    mensaje = "Ha sacado una carta del mazo.";
+    break;
+  case 'T':
+    mensaje = "Carta tirada.";
+    break;
+  default:
+    mensaje = "Acción no reconocida.";
+    break;
+  }
+
+  std::cout << "\033[32m" << mensaje << "\033[0m" << std::endl;
+}
+
+void Interfaz::mostrarMensajesCoordenadas(const std::string &accion) {
+  std::string mensaje;
+
+  switch (accion[0]) {
+  case 'I':
+    mensaje = "Ingrese las coordenadas donde se \033[32mencuentre el ";
+    break;
+  case 'N':
+    mensaje = "\033[31mNo hay un ";
+    break;
+  case 'D':
+    mensaje = "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m al ";
+    break;
+  case 'L':
+    mensaje =
+        "\033[31mLa coordenada de destino seleccionada no es adyacente al ";
+    break;
+  default:
+    mensaje = "Mensaje no reconocido.";
+    break;
+  }
+
+  switch (accion[1]) {
+  case 'S':
+    mensaje += "soldado";
+    break;
+  case 'A':
+    mensaje += "armamento";
+    break;
+  default:
+    mensaje += "elemento";
+    break;
+  }
+
+  mensaje += "\033[0m.";
+
+  if (accion[0] == 'N' && accion[1] == 'S') {
+    mensaje += " en la casilla seleccionada.";
+  }
+
+  std::cout << mensaje << std::endl;
+}
+
+void Interfaz::mostrarMsjErrorCoordenadas(const std::string &accion) {
+  std::string mensaje;
+
+  switch (accion[0]) {
+  case 'C':
+    mensaje = "Coordenada inválida. ";
+    break;
+  case '-':
+    mensaje = "";
+    break;
+
+  default:
+    mensaje = "Mensaje no reconocido.";
+    break;
+  }
+
+  switch (accion[1]) {
+  case 'O':
+    mensaje += "El casillero no es de agua o ya está ocupado.";
+    break;
+  case 'B':
+    mensaje += "El barco no pudo ser colocado.";
+    break;
+  case 'A':
+    mensaje += "El avión no pudo ser colocado.";
+    break;
+  case 'V':
+    mensaje += "El casillero no está en el aire o ya está ocupado.";
+    break;
+  default:
+    mensaje = "Mensaje no reconocido.";
+    break;
+  }
+
+  std::cout << mensaje << std::endl;
+}
+
+void Interfaz::mostrarMina(int x, int y, int z) {
+  std::cout << "La mina está en la posición: X: " << x << ", Y: " << y
+            << " , Z:" << z << std::endl;
+}
+
+void Interfaz::mostrarMinaExplosion() {
+  cout << "\033[1;31m\nLa mina explotó.\033[0m";
+}
+
+void Interfaz::mostrarIniciarFichas() {
+  std::cout << "\033[1;32mInicializando fichas...\033[0m" << std::endl;
+}
+
+void Interfaz::mostrarFichasInicializadas() {
+  std::cout << "\033[1;31m\nFichas inicializadas.\033[0m" << std::endl;
+}
+
+void Interfaz::pedirCoordenadas(int &x, int &y, int &z, Tablero *tablero) {
   bool coordenadasValidas = false;
 
-  std::cout << "\nIngrese las coordenas del casillero (ancho, alto, "
-               "profundo): "
+  std::cout << "\nIngrese las coordenadas del casillero (\033[35mancho\033[0m, "
+               "\033[35malto\033[0m, \033[35mprofundo\033[0m): "
             << std::endl;
 
   while (!coordenadasValidas) {
     int *dimesiones = tablero->getDimensiones();
+    std::cout << "Ingrese el valor para \033[35mancho\033[0m: ";
     std::cin >> x;
+
+    std::cout << "Ingrese el valor para \033[35malto\033[0m: ";
     std::cin >> y;
+
+    std::cout << "Ingrese el valor para \033[35mprofundo\033[0m: ";
     std::cin >> z;
 
     if (x < 1 || y < 1 || z < 1 || x > dimesiones[0] || y > dimesiones[1] ||
@@ -507,7 +796,13 @@ void Interfaz::mostrarTableroDeJugadorBitMap(Tablero *tablero,
     }
   }
 
-  std::cout << "Guardando tablero." << std::endl;
   image.WriteToFile("tablero.bmp");
-  std::cout << "Tablero impreso." << std::endl;
+  std::cout << "\n\033[1m\033[30;48;2;114;192;225mTablero Guardado.\033[0m\n";
+}
+
+void Interfaz::sobrescribirArchivoBMP() {
+  BMP imagen;
+  imagen.SetSize(1, 1);
+  imagen.SetBitDepth(24);
+  imagen.WriteToFile("tablero.bmp");
 }

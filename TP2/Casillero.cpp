@@ -146,11 +146,11 @@ void Casillero::setContadorDeTurnos(int turnos) {
 
 bool Casillero::estaVacio() {
 
-  if (this->ficha == NULL) {
-    return true;
+  if (this->ficha != NULL) {
+    return false;
   }
 
-  return false;
+  return true;
 }
 
 void Casillero::bajarTurno() { this->contadorDeTurno--; }

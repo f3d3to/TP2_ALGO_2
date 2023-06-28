@@ -3,17 +3,23 @@
 #include "Constantes.h"
 #include "Ficha.h"
 #include "Jugador.h"
+#include "Lista.h"
 #include "Pila.h"
 #include "Tablero.h"
+#include <csignal>
+#include <iostream>
 #include <string>
+#include <unistd.h>
 
 Juego::Juego() {
   this->interfaz->mostrarPantallaInicial();
   this->cantidadTurnosJuego = 0;
   this->interfaz = new Interfaz();
   this->hayGanador = NULL;
+  this->estadoActual = ENCURSO;
   this->jugadorEnTurno = NULL;
   this->turno = 0;
+  this->interfaz->mostrarInstruccion("I");
   unsigned int cantidadJugadores = pedirCantidadJugadores();
   unsigned int cantidadFichas = pedirCantidadFichas();
   unsigned int cantidadCartas = pedirCantidadCartas();
@@ -54,7 +60,7 @@ Juego::Juego() {
 
     this->mazo->apilar(nuevaCarta);
   }
-  std::cout << "\033[1m\033[4mJuego configurado.\033[0m" << std::endl;
+  this->interfaz->mostrarInstruccion("J");
 }
 
 Juego::~Juego() {
@@ -73,22 +79,12 @@ Juego::~Juego() {
   delete this->mazo;
 }
 
-bool Juego::determinarGanador() {
-  bool hayGanador;
-  if (this->hayGanador != NULL) {
-    hayGanador = true;
-    this->interfaz->mostrarGanador(this->hayGanador->getNombre());
-  } else {
-    hayGanador = false;
-  }
-  return hayGanador;
-}
-
 void Juego::cambiarDeJugadorActual() {
   bool cursorAvanzado = this->jugadores->avanzarCursor();
 
   if (cursorAvanzado) {
     this->jugadorEnTurno = this->jugadores->obtenerCursor();
+
   } else {
     this->jugadores
         ->iniciarCursor(); // Reiniciar el cursor al principio de la lista
@@ -103,7 +99,6 @@ void Juego::cambiarDeJugadorActual() {
   if (this->jugadorEnTurno != NULL) {
     this->interfaz->mostrarJugadorEnTurno(this->jugadorEnTurno->getNombre());
   } else {
-    std::cout << "No hay jugadores disponibles." << std::endl;
   }
 }
 
@@ -179,13 +174,13 @@ void Juego::pedirDimensionesJuego(int cantidadJugadores, int cantidadFichas,
   while (!diemensionesValidas) {
     this->interfaz->pedirDimensiones();
     try {
-      std::cout << "Ancho:  \t";
+      std::cout << "\033[1;35mAncho:\033[0m  \t";
       std::cin >> ancho;
 
-      std::cout << "Alto:   \t";
+      std::cout << "\033[1;35mAlto:\033[0m   \t";
       std::cin >> alto;
 
-      std::cout << "Profundo:  \t";
+      std::cout << "\033[1;35mProfundo:\033[0m  \t";
       std::cin >> profundo;
 
       if (ancho < 1 || alto < 1 || profundo < 1 ||
@@ -250,10 +245,11 @@ unsigned int Juego::soldadosDeJugadorEnTablero(Jugador *jugador) {
   for (int k = 0; k < tablero->getDimensiones()[2]; k++) {
     for (int j = 0; j < tablero->getDimensiones()[1]; j++) {
       for (int i = 0; i < tablero->getDimensiones()[0]; i++) {
-        Casillero *casillero = tablero->getCasillero(i, j, k);
-        if (!casillero->estaVacio() &&
-            casillero->getFicha()->getIdentificadorDeJugador() ==
-                jugador->getNombre()) {
+        Ficha *fichaEnCasillero = tablero->getCasillero(i, j, k)->getFicha();
+        if (fichaEnCasillero != NULL &&
+            fichaEnCasillero->getIdentificadorDeJugador() ==
+                jugador->getNombre() &&
+            fichaEnCasillero->getTipoDeFicha() == SOLDADO) {
           contador++;
         }
       }
@@ -261,46 +257,58 @@ unsigned int Juego::soldadosDeJugadorEnTablero(Jugador *jugador) {
   }
   return contador;
 }
-
-/*
- * Pre: el jugador elige una accion
- * Post: ejecuta la accion y actualiza el tablero
- */
-
-/*
- *Pre tiene que asignar un soldado
- */
-Jugador *Juego::validarSiHayGanador(Lista<Jugador *> *jugadores) {
-  if (jugadores == NULL) {
-    throw "La lista de jugadores esta vacia";
+void Juego::mostrarResultadosPartida() {
+  if (estaEmpatado) {
+    this->interfaz->mostrarEmpate();
   }
-  bool hayGanador = false;
-  int cantidadGanadores = 0;
-  Jugador *ganador = NULL;
-
-  jugadores->iniciarCursor();
-  while (jugadores->avanzarCursor()) {
-
-    if (this->soldadosDeJugadorEnTablero(jugadores->obtenerCursor()) != 0) {
-      cantidadGanadores++;
-      ganador = jugadores->obtenerCursor();
-    }
+  if (hayGanador) {
+    this->interfaz->mostrarGanador(this->hayGanador->getNombre());
   }
-  if (hayGanador && cantidadGanadores == 1) {
-    return ganador;
-  }
-  return NULL;
+  this->interfaz->sobrescribirArchivoBMP();
+  this->interfaz->mostrarFinDelJuego();
 }
 
-/*
- * Pre: Recibe una coordenada
- * Post:
- */
+void Juego::validarSiHayGanador(Lista<Jugador *> *jugadores) {
+  Lista<Jugador *> *jugadoresAux = new Lista<Jugador *>;
+  jugadoresAux->agregar(*jugadores);
+  if (jugadores == NULL) {
+    throw "La lista de jugadores está vacía";
+  }
+
+  int cantidadGanadores = 0;
+  int cantidadPerdedores = 0;
+  Jugador *ganador = NULL;
+
+  jugadoresAux->iniciarCursor();
+  while (jugadoresAux->avanzarCursor()) {
+    Jugador *jugador = jugadoresAux->obtenerCursor();
+    if (this->soldadosDeJugadorEnTablero(jugador) > 0) {
+      cantidadGanadores++;
+      ganador = jugador;
+    } else if (this->soldadosDeJugadorEnTablero(jugador) == 0) {
+      cantidadPerdedores++;
+    }
+  }
+
+  if (cantidadGanadores == 1) {
+    this->hayGanador = ganador;
+    this->estadoActual = FINALIZADO;
+  } else if (cantidadGanadores == 0 &&
+             cantidadPerdedores == jugadoresAux->contarElementos()) {
+    this->estaEmpatado = true;
+    this->estadoActual = FINALIZADO;
+  }
+  delete jugadoresAux;
+}
+
 void Juego::matarFicha(Casillero *casillero) {
 
   if (casillero == NULL) {
     throw "El casillero está vacío";
   }
+  TipoDeFicha tipo = casillero->getFicha()->getTipoDeFicha();
+
+  this->interfaz->mostrarFichaEliminada(tipo);
   casillero->eliminarFicha();
 }
 
@@ -332,8 +340,8 @@ void Juego::colocarArmamento(int x, int y, int z, Ficha *armamento) {
     } else {
       armamento->setTipoDeFicha(ARMAMENTO);
       casillero->setFicha(armamento);
+      this->interfaz->mostrarFichaColocada("R");
     }
-    std::cout << "Armamento colocado." << std::endl;
 
   } catch (...) {
     this->interfaz->informarCasilleroNoDisponible();
@@ -348,7 +356,7 @@ void Juego::colocarMina(int x, int y, int z) {
   try {
     if (fichaEnCasillero != NULL && casillero->obtenerTerreno() == TIERRA &&
         (fichaEnCasillero->getIdentificadorDeJugador() !=
-             jugadorEnTurno->getNombre() ||
+             jugador->getNombre() ||
          casillero->estaVacio()) &&
         !casillero->estaBloqueado()) {
       if (fichaEnCasillero->getTipoDeFicha() == MINA) {
@@ -359,6 +367,7 @@ void Juego::colocarMina(int x, int y, int z) {
       } else {
         // fichaEnCasillero es un soldado o armemento
         casillero->bloquear();
+        this->interfaz->mostrarMinaExplosion();
         this->matarFicha(casillero);
         casillero->setContadorDeTurnos(5);
         delete mina;
@@ -366,7 +375,7 @@ void Juego::colocarMina(int x, int y, int z) {
 
     } else {
       casillero->setFicha(mina);
-      std::cout << "Mina colocada." << std::endl;
+      this->interfaz->mostrarFichaColocada("M");
     }
   } catch (...) {
     this->interfaz->informarCasilleroNoDisponible();
@@ -384,16 +393,13 @@ void Juego::lanzarMisil(int x, int y, int z) {
          fichaEnCasillero->getTipoDeFicha() == ARMAMENTO)) {
       this->matarFicha(casillero);
       casillero->setContadorDeTurnos(3);
-      std::cout << "Se ha disparo un misil" << std::endl;
+      this->interfaz->mostrarFichaColocada("C");
     }
   } catch (...) {
     this->interfaz->informarCasilleroNoDisponible();
   }
 }
 
-/*Pre: HAY QUE DESAPILAR LA PILA DE FICHAS Y CREAR EL SOLDADO ANTES DE LLAMAR
- * A ESTA FUNCION Post:verifica y coloca el soldado.
- */
 void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
   Jugador *jugador = this->jugadorEnTurno;
   Casillero *casillero = this->tablero->getCasillero(x, y, z);
@@ -419,7 +425,7 @@ void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
     } else {
       soldado->setTipoDeFicha(SOLDADO);
       casillero->setFicha(soldado);
-      std::cout << "\033[32mSoldado colocado.\033[0m" << std::endl;
+      this->interfaz->mostrarFichaColocada("S");
     }
   }
 
@@ -428,9 +434,6 @@ void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
   }
 }
 
-/* Pre: recibe una coordenada de origen y de destino.
-  Post: mueve el soldado a un casillero adyacente
- */
 void Juego::moverSoldado() {
   int x1, y1, z1, x2, y2, z2;
   int *dim = this->tablero->getDimensiones();
@@ -439,9 +442,7 @@ void Juego::moverSoldado() {
   Casillero *casilleroOrigen = NULL;
 
   while (!seleccionOrigen) {
-    std::cout << "Ingrese las coordenadas donde se \033[32mencuentre el "
-                 "soldado\033[0m."
-              << std::endl;
+    this->interfaz->mostrarMensajesCoordenadas("IS");
     this->interfaz->pedirCoordenadas(x1, y1, z1, this->tablero);
     Jugador *jugador = this->jugadorEnTurno;
     casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
@@ -452,28 +453,22 @@ void Juego::moverSoldado() {
             jugador->getNombre()) {
       seleccionOrigen = true;
     } else {
-      std::cout << "\033[31mNo hay un soldado del jugador actual en la casilla "
-                   "de origen seleccionada.\033[0m"
-                << std::endl;
+      this->interfaz->mostrarMensajesCoordenadas("NS");
     }
   }
 
   while (!seleccionDestino) {
-    std::cout << "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m "
-                 "del soldado."
-              << std::endl;
+    this->interfaz->mostrarMensajesCoordenadas("DS");
     this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
 
     Casillero *casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
     if (casilleroDestino->esAdyacenteLineal(casilleroOrigen)) {
       this->colocarSoldado(x2, y2, z2, casilleroOrigen->getFicha());
       casilleroOrigen->setFicha(NULL);
-      std::cout << "\033[32mSoldado movido.\033[0m" << std::endl;
+      this->interfaz->mostrarAccionesRealizadas("S");
       seleccionDestino = true;
     } else {
-      std::cout << "\033[31mLa coordenada de destino seleccionada no es "
-                   "adyacente al soldado.\033[0m"
-                << std::endl;
+      this->interfaz->mostrarMensajesCoordenadas("LS");
     }
   }
 }
@@ -486,9 +481,7 @@ void Juego::moverArmamento() {
   Casillero *casilleroOrigen = NULL;
 
   while (!seleccionOrigen) {
-    std::cout << "Ingrese las coordenadas donde se \033[32mencuentre el "
-                 "armamento\033[0m."
-              << std::endl;
+    this->interfaz->mostrarMensajesCoordenadas("IA");
     this->interfaz->pedirCoordenadas(x1, y1, z1, this->tablero);
     Jugador *jugador = this->jugadorEnTurno;
     casilleroOrigen = this->tablero->getCasillero(x1, y1, z1);
@@ -499,36 +492,25 @@ void Juego::moverArmamento() {
             jugador->getNombre()) {
       seleccionOrigen = true;
     } else {
-      std::cout
-          << "\033[31mNo hay un armamento del jugador actual en la casilla "
-             "de origen seleccionada.\033[0m"
-          << std::endl;
+      this->interfaz->mostrarMensajesCoordenadas("NA");
     }
   }
 
   while (!seleccionDestino) {
-    std::cout << "Ingrese las coordenadas de \033[32mdestino adyacente\033[0m "
-                 "del armamento."
-              << std::endl;
+    this->interfaz->mostrarMensajesCoordenadas("DA");
     this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
 
     Casillero *casilleroDestino = this->tablero->getCasillero(x2, y2, z2);
     if (casilleroDestino->esAdyacenteLineal(casilleroOrigen)) {
       this->colocarArmamento(x2, y2, z2, casilleroOrigen->getFicha());
       casilleroOrigen->setFicha(NULL);
-      std::cout << "\033[32mArmamento movido.\033[0m" << std::endl;
+      this->interfaz->mostrarAccionesRealizadas("A");
       seleccionDestino = true;
     } else {
-      std::cout << "\033[31mLa coordenada de destino seleccionada no es "
-                   "adyacente al armamento.\033[0m"
-                << std::endl;
+      this->interfaz->mostrarMensajesCoordenadas("LA");
     }
   }
 }
-
-/* Pre:
-  Post: Agrega una carta al mazo del jugador (lista)
- */
 
 void Juego::sacarCartaDeMazo(Jugador *jugador) {
 
@@ -540,8 +522,9 @@ void Juego::sacarCartaDeMazo(Jugador *jugador) {
   } catch (...) {
     this->interfaz->mazoSinCartas();
   }
-  std::cout << "Ha sacado una carta del mazo." << std::endl;
+  this->interfaz->mostrarAccionesRealizadas("C");
 }
+
 void Juego::ataqueQuimico() {
   try {
     int x = 0, y = 0, z = 0;
@@ -571,16 +554,16 @@ void Juego::ataqueQuimico() {
         }
       }
     }
-    std::cout << "Ha realizado un ataque químico." << std::endl;
-
+    this->interfaz->mostrarAccionesRealizadas("Q");
   } catch (...) {
     this->interfaz->ingresoInvalido();
   }
 }
+
 void Juego::colocarAvion() {
   try {
     int x = 0, y = 0, z = 0;
-    std::cout << "Coloque un avión" << std::endl;
+    this->interfaz->mostrarInstruccion("A");
     bool coordenadaValida = false;
     while (!coordenadaValida) {
       this->interfaz->pedirCoordenadas(x, y, z, this->tablero);
@@ -591,23 +574,21 @@ void Juego::colocarAvion() {
         Jugador *jugador = this->jugadorEnTurno;
         Ficha *avion = new Ficha(AVION, jugador->getNombre());
         casillero->setFicha(avion);
-        std::cout << "Avion colocado." << std::endl;
+        this->interfaz->mostrarFichaColocada("A");
         coordenadaValida = true;
       } else {
-        std::cout << "Coordenada inválida. El casillero no está en el aire o "
-                     "ya está ocupado."
-                  << std::endl;
+        this->interfaz->mostrarMsjErrorCoordenadas("CV");
       }
     }
   } catch (...) {
-    std::cout << "El avión no pudo ser colocado." << std::endl;
+    this->interfaz->mostrarMsjErrorCoordenadas("-A");
   }
 }
 
 void Juego::colocarBarco() {
   try {
     int x = 0, y = 0, z = 0;
-    std::cout << "Coloque un barco" << std::endl;
+    this->interfaz->mostrarInstruccion("B");
     bool coordenadaValida = false;
     while (!coordenadaValida) {
       this->interfaz->pedirCoordenadas(x, y, z, this->tablero);
@@ -618,21 +599,19 @@ void Juego::colocarBarco() {
         Jugador *jugador = this->jugadorEnTurno;
         Ficha *barco = new Ficha(BARCO, jugador->getNombre());
         casillero->setFicha(barco);
-        std::cout << "Barco colocado." << std::endl;
+        this->interfaz->mostrarFichaColocada("B");
         coordenadaValida = true;
       } else {
-        std::cout << "Coordenada inválida. El casillero no es de agua o ya "
-                     "está ocupado."
-                  << std::endl;
+        this->interfaz->mostrarMsjErrorCoordenadas("CO");
       }
     }
   } catch (...) {
-    std::cout << "El barco no pudo ser colocado." << std::endl;
+    this->interfaz->mostrarMsjErrorCoordenadas("-B");
   }
 }
 
 void Juego::agregarTresMinas() {
-  std::cout << "Coloque un \033[1;32tres minas\033[0m" << std::endl;
+  this->interfaz->mostrarInstruccion("T");
   for (int i = 0; i < 3; i++) {
     try {
       int x = 0, y = 0, z = 0;
@@ -642,11 +621,11 @@ void Juego::agregarTresMinas() {
       this->interfaz->ingresoInvalido();
     }
   }
-  std::cout << "Ha colocado las tres minas." << std::endl;
+  this->interfaz->mostrarFichaColocada("T");
 }
 
 void Juego::identificarFichaEnCasillero() {
-  std::cout << "Identifique un \033[1;32casillero\033[0m" << std::endl;
+  this->interfaz->mostrarInstruccion("W");
   try {
     int x = 0, y = 0, z = 0;
 
@@ -656,12 +635,12 @@ void Juego::identificarFichaEnCasillero() {
   } catch (...) {
     this->interfaz->ingresoInvalido();
   }
-  std::cout << "El casillero se ha mostrado." << std::endl;
+  this->interfaz->mostrarAccionesRealizadas("M");
 }
 
 void Juego::agregarSoldado() {
-  std::cout << "Llame un \033[1;32refuerzo\033[0m. ";
-  std::cout << "Coloque  un \033[1;32soldado\033[0m" << std::endl;
+  this->interfaz->mostrarInstruccion("L");
+  this->interfaz->mostrarInstruccion("S");
   try {
     int x = 0, y = 0, z = 0;
 
@@ -672,7 +651,7 @@ void Juego::agregarSoldado() {
   } catch (...) {
     this->interfaz->ingresoInvalido();
   }
-  std::cout << "Ha llamado un refuerzo." << std::endl;
+  this->interfaz->mostrarFichaColocada("L");
 }
 
 void Juego::ejecutarCarta(unsigned int indice) {
@@ -702,8 +681,6 @@ void Juego::ejecutarCarta(unsigned int indice) {
 }
 
 void Juego::usarCartaDeJugador(unsigned int posicionDeCarta) {
-  // try {
-  // Obtiene carta de jugador
   Carta *carta = this->jugadorEnTurno->getCartas()->obtener(posicionDeCarta);
   if (carta != NULL) {
     this->ejecutarCarta(carta->getFuncion());
@@ -712,14 +689,12 @@ void Juego::usarCartaDeJugador(unsigned int posicionDeCarta) {
   } else {
     this->interfaz->jugadorSinCartas();
   }
-  std::cout << "Carta tirada." << std::endl;
+  this->interfaz->mostrarAccionesRealizadas("T");
 }
 
 void Juego::inicializarFichas() {
-  // llevar a interfaz el mensaje
-  std::cout << "\033[1;32mInicializando fichas...\033[0m" << std::endl;
+  this->interfaz->mostrarIniciarFichas();
   unsigned int contador = 0;
-  // revisar logica por qué jugador 2 de 2 no puede iniciarlizar fichas.
   while (contador < this->jugadores->contarElementos()) {
     Jugador *jugador = this->jugadorEnTurno;
     this->interfaz->mostrarJugadorEnTurno(jugador->getNombre());
@@ -729,7 +704,7 @@ void Juego::inicializarFichas() {
     for (int i = 0; i < cantidadSoldados; i++) {
       int x = 0, y = 0, z = 0;
       Ficha *soldado = jugador->getFicha();
-      std::cout << "Coloque un \033[1;33msoldado\033[0m";
+      this->interfaz->mostrarInstruccion("S");
       this->interfaz->pedirCoordenadas(x, y, z, this->tablero);
       while (this->tablero->getCasillero(x, y, z)->obtenerTerreno() == AGUA ||
              this->tablero->getCasillero(x, y, z)->obtenerTerreno() == AIRE) {
@@ -740,7 +715,7 @@ void Juego::inicializarFichas() {
     for (int in = 0; in < cantidadArmamentos; in++) {
       int x2 = 0, y2 = 0, z2 = 0;
       Ficha *armamento = jugador->getFicha();
-      std::cout << "Coloque un \033[1;32marmamento\033[0m";
+      this->interfaz->mostrarInstruccion("R");
       this->interfaz->pedirCoordenadas(x2, y2, z2, this->tablero);
       this->colocarArmamento(x2, y2, z2, armamento);
     }
@@ -748,7 +723,8 @@ void Juego::inicializarFichas() {
     this->cambiarDeJugadorActual();
     this->interfaz->limpiarPantalla();
   }
-  std::cout << "\033[1;31mFichas inicializadas.\033[0m\n" << std::endl;
+  this->interfaz->mostrarFichasInicializadas();
+  this->interfaz->mostrarColoresFichas();
   this->interfaz->limpiarPantalla();
 }
 
@@ -782,6 +758,7 @@ bool Juego::hayBarco(Jugador *jugador) {
   return false;
 }
 
+/* Chequear */
 void Juego::ejecutarRadar(Jugador *jugador) {
   int *dim = this->tablero->getDimensiones();
   for (int k = 0; k < dim[2]; k++) {
@@ -799,8 +776,8 @@ void Juego::ejecutarRadar(Jugador *jugador) {
                 if (casillero->getFicha() != NULL &&
                     casillero->getFicha()->getIdentificadorDeJugador() ==
                         jugador->getNombre()) {
-                  std::cout << "La mina está en la posición: X: " << i
-                            << ", Y: " << j << " , Z:" << k << std::endl;
+
+                  this->interfaz->mostrarMina(i, j, k);
                 }
               }
             }
@@ -814,11 +791,11 @@ void Juego::ejecutarRadar(Jugador *jugador) {
 void Juego::jugarBatallaDigital() {
   this->interfaz->limpiarPantalla();
   this->inicializarFichas();
+  this->interfaz->mostrarBatallaIniciada();
   while (this->estadoActual != FINALIZADO) {
-    this->interfaz->mostrarBatallaIniciada();
+    this->interfaz->sobrescribirArchivoBMP();
     int x0 = 0, y0 = 0, z0 = 0, x1 = 0, y1 = 0, z1 = 0;
     this->sacarCartaDeMazo(this->jugadorEnTurno);
-
     // Obtiene el nro de la carta y la ejecuta
     this->interfaz->mostrarCartasJugador(this->jugadorEnTurno);
     this->interfaz->pedirUsarCarta();
@@ -830,7 +807,7 @@ void Juego::jugarBatallaDigital() {
       this->usarCartaDeJugador(nroCarta);
     }
 
-    this->interfaz->indicarColocarMina();
+    this->interfaz->mostrarInstruccion("X");
     this->interfaz->pedirCoordenadas(x1, y1, z1, this->tablero);
     this->colocarMina(x1, y1, z1);
 
@@ -848,7 +825,7 @@ void Juego::jugarBatallaDigital() {
       this->moverArmamento();
     }
     if (this->hayBarco(this->jugadorEnTurno)) {
-      std::cout << "Tiene un barco, puede lanzar un misil." << endl;
+      this->interfaz->mostrarInstruccion("M");
       this->interfaz->pedirCoordenadas(x0, y0, z0, this->tablero);
       this->lanzarMisil(x0, y0, z0);
     }
@@ -858,13 +835,9 @@ void Juego::jugarBatallaDigital() {
                                                   this->jugadorEnTurno);
 
     this->interfaz->limpiarPantalla();
-
     this->cambiarDeJugadorActual();
-
     this->turno++;
-    this->hayGanador = this->validarSiHayGanador(this->jugadores);
-    this->estadoActual = this->determinarGanador() ? FINALIZADO : ENCURSO;
+    this->validarSiHayGanador(this->jugadores);
   }
-  this->interfaz->mostrarGanador(this->hayGanador->getNombre());
-  this->interfaz->mostrarFinDelJuego();
+  this->mostrarResultadosPartida();
 }

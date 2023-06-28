@@ -24,6 +24,7 @@ private:
   unsigned int cantidadMaximaCartas;
   unsigned int cantidadTurnosJuego;
   Estado estadoActual;
+  bool estaEmpatado;
   unsigned int cantidadDeFichas;
   int turno;
 
@@ -46,6 +47,7 @@ public:
    * post: devuelve el nombre ddel jugador.
    */
   std::string pedirNombre(int jugadorNumero);
+  void mostrarResultadosPartida();
 
   /*
    * pre: exista una instancia de juego.
@@ -60,18 +62,11 @@ public:
   void cambiarDeTurno();
 
   /*
-   * pre: exista una instancia de juego.
-   * post: determina si hay un ganador, viendo si el hayGanador es distinto de
-   * NULL.
-   */
-  bool determinarGanador();
-
-  /*
    * Pre:Exista una clase juego previamente. recibe la lista de jugadores.
    * Post: comprueba si solo una de los jugadores tiene soldado, y de ser
    * verdadero devuelve al jugador ganador.
    */
-  Jugador *validarSiHayGanador(Lista<Jugador *> *jugadores);
+  void validarSiHayGanador(Lista<Jugador *> *jugadores);
 
   /*
    * pre: exista una instancia de juego y reciba un casillero.
@@ -265,7 +260,5 @@ public:
    */
   void jugarBatallaDigital();
 };
-
-
 
 #endif /* JUEGO_H_ */

@@ -11,6 +11,63 @@ using namespace std;
 
 class Interfaz {
 public:
+  /* Pre: x, y, z deben ser valores válidos
+     Post: muestra la mina en las coordenadas (x, y, z)
+  */
+  void mostrarMina(int x, int y, int z);
+  /* Pre:
+     Post:
+  */
+  void mostrarMinaExplosion();
+  /* Pre:
+     Post:
+  */
+  void mostrarFichaEliminada(TipoDeFicha);
+  /* Pre:
+     Post:
+  */
+  void mostrarEmpate();
+
+  /* Pre: ficha debe ser una cadena de caracteres válida
+     Post: muestra un mensaje dependiendo qué ficha fue colocada
+  */
+  void mostrarFichaColocada(const std::string &ficha);
+
+  /* Pre: instruccion debe ser una cadena de caracteres válida
+     Post: muestra la instrucción en pantalla
+  */
+  void mostrarInstruccion(const std::string &instruccion);
+
+  /* Pre: accion debe ser una cadena de caracteres válida
+     Post: muestra un mensaje de error relacionado con las coordenadas en
+     pantalla
+  */
+  void mostrarMsjErrorCoordenadas(const std::string &accion);
+
+  /* Pre: accion debe ser una cadena de caracteres válida
+     Post: muestra las acciones realizadas en pantalla
+  */
+  void mostrarAccionesRealizadas(const std::string &accion);
+
+  /* Pre: accion debe ser una cadena de caracteres válida
+     Post: muestra los mensajes relacionados con las coordenadas en pantalla
+  */
+  void mostrarMensajesCoordenadas(const std::string &accion);
+
+  /* Pre: -
+     Post: muestra los colores de las fichas en pantalla
+  */
+  void mostrarColoresFichas();
+
+  /* Pre: -
+     Post: muestra el inicio de las fichas en pantalla
+  */
+  void mostrarIniciarFichas();
+
+  /* Pre: -
+     Post: muestra las fichas inicializadas en pantalla
+  */
+  void mostrarFichasInicializadas();
   /*
    * Pre: ---
    * Post: muestra por pantalla el menu principal del juego mostrando el titulo
@@ -286,6 +343,8 @@ public:
    * devuelve el numero de la carta a usar.
    */
   unsigned int pedirNroCarta(Jugador *jugador);
+
+  void sobrescribirArchivoBMP();
 };
 
 #endif /* INTERFAZ_H_ */
