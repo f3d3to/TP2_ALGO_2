@@ -1,4 +1,5 @@
 #include "Juego.h"
+#include "Carta.h"
 #include "Casillero.h"
 #include "Constantes.h"
 #include "Ficha.h"
@@ -276,7 +277,7 @@ void Juego::validarSiHayGanador(Lista<Jugador *> *jugadores) {
   }
 
   int cantidadGanadores = 0;
-  int cantidadPerdedores = 0;
+  unsigned int cantidadPerdedores = 0;
   Jugador *ganador = NULL;
 
   jugadoresAux->iniciarCursor();
@@ -320,7 +321,7 @@ void Juego::colocarArmamento(int x, int y, int z, Ficha *armamento) {
   try {
     if (fichaEnCasillero != NULL && casillero->obtenerTerreno() == TIERRA &&
         (fichaEnCasillero->getIdentificadorDeJugador() !=
-             jugadorEnTurno->getNombre() ||
+             jugador->getNombre() ||
          casillero->estaVacio()) &&
         !casillero->estaBloqueado()) {
 
@@ -383,7 +384,6 @@ void Juego::colocarMina(int x, int y, int z) {
 }
 
 void Juego::lanzarMisil(int x, int y, int z) {
-  Jugador *jugador = this->jugadorEnTurno;
   Casillero *casillero = this->tablero->getCasillero(x, y, z);
   Ficha *fichaEnCasillero = casillero->getFicha();
 
@@ -408,7 +408,7 @@ void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
   try {
     if (fichaEnCasillero != NULL &&
         (fichaEnCasillero->getIdentificadorDeJugador() !=
-         jugadorEnTurno->getNombre()) &&
+         jugador->getNombre()) &&
         !casillero->estaBloqueado()) {
 
       if (fichaEnCasillero->getTipoDeFicha() == SOLDADO) {
@@ -436,7 +436,6 @@ void Juego::colocarSoldado(int x, int y, int z, Ficha *soldado) {
 
 void Juego::moverSoldado() {
   int x1, y1, z1, x2, y2, z2;
-  int *dim = this->tablero->getDimensiones();
   bool seleccionOrigen = false;
   bool seleccionDestino = false;
   Casillero *casilleroOrigen = NULL;
@@ -475,7 +474,6 @@ void Juego::moverSoldado() {
 
 void Juego::moverArmamento() {
   int x1, y1, z1, x2, y2, z2;
-  int *dim = this->tablero->getDimensiones();
   bool seleccionOrigen = false;
   bool seleccionDestino = false;
   Casillero *casilleroOrigen = NULL;
@@ -529,7 +527,6 @@ void Juego::ataqueQuimico() {
   try {
     int x = 0, y = 0, z = 0;
     this->interfaz->pedirCoordenadas(x, y, z, this->tablero);
-    Casillero *casilleroAux = this->tablero->getCasillero(x, y, z);
     // itera el tablero
     for (int i = 0; i < 5; i++) {
       for (int j = 0; j < 5; j++) {
@@ -626,14 +623,12 @@ void Juego::agregarTresMinas() {
 
 void Juego::identificarFichaEnCasillero() {
   this->interfaz->mostrarInstruccion("W");
-  try {
-    int x = 0, y = 0, z = 0;
+  int x = 0, y = 0, z = 0;
 
-    this->interfaz->pedirCoordenadas(x, y, z, this->tablero);
-    this->interfaz->mostrarFichaEnCasillero(tablero->getCasillero(x, y, z));
-
-  } catch (...) {
-    this->interfaz->ingresoInvalido();
+  this->interfaz->pedirCoordenadas(x, y, z, this->tablero);
+  if (this->tablero->getCasillero(x, y, z)->getFicha() != NULL) {
+    this->interfaz->mostrarFichaEnCasillero(
+        this->tablero->getCasillero(x, y, z));
   }
   this->interfaz->mostrarAccionesRealizadas("M");
 }
@@ -836,8 +831,8 @@ void Juego::jugarBatallaDigital() {
 
     this->interfaz->limpiarPantalla();
     this->cambiarDeJugadorActual();
-    this->turno++;
     this->validarSiHayGanador(this->jugadores);
+    this->turno++;
   }
   this->mostrarResultadosPartida();
 }
