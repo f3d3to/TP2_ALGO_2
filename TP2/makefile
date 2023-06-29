@@ -1,4 +1,4 @@
-CFLAGS=-g -pedantic -Wall -w
+CFLAGS=-g -pedantic -Wall
 CC=g++
 
 all: batalla_digitalv2 clear 
